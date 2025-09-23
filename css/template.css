@@ -1,0 +1,79 @@
+:root{
+    --accent: red;
+    --background: rgb(210, 210, 210);
+    --textBlack: black;
+    --textWhite: white;
+    --darkLineColor: rgb(190, 190, 190);
+    --lightLineColor: var(--background);
+}
+body{
+    /* display: flex; */
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+}
+#nav{
+    /* width: fit-content; */
+    height: 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 7px;
+    position: fixed;
+    transform: translateX(-50%);
+    left: 50%;
+    z-index: 100;
+    margin-top: 10px;
+}
+#nav button:visited, #nav button{
+    text-decoration: none;
+    color: var(--textBlack);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    /* margin: 0 1px; */
+    height: 100%;
+    cursor: pointer;
+    word-spacing: -3px;
+    transition-property: background-color;
+    transition-duration: 250ms;
+    border: none;
+
+}
+#nav button:nth-child(2){
+    margin: 0 2px;
+}
+#nav button:hover, #nav button.active{
+    background-color: rgb(190, 200, 200);
+}
+
+.page{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    transition-property: left;
+    transition-duration: 500ms;
+    top: 0;
+    border: 1px solid black;
+}
+#plan_page{
+    background-color: var(--background);
+    left: 0vw;
+}
+#expenses_page{
+    background-color: var(--background);
+    left: 100vw;
+}
+#sinking_funds_page{
+    background-color: var(--background);
+    left: 200vw;
+}
+.bold{
+    font-weight: 600;
+}
