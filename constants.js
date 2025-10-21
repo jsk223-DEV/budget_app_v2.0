@@ -1,35 +1,35 @@
 const MONTH_LOOKUP = new Map([
-    ['01', 'January'],
-    ['02', 'February'],
-    ['03', 'March'],
-    ['04', 'April'],
-    ['05', 'May'],
-    ['06', 'June'],
-    ['07', 'July'],
-    ['08', 'August'],
-    ['09', 'September'],
-    ['10', 'October'],
-    ['11', 'November'],
-    ['12', 'December']
-])
+	['00', 'January'],
+	['01', 'February'],
+	['02', 'March'],
+	['03', 'April'],
+	['04', 'May'],
+	['05', 'June'],
+	['06', 'July'],
+	['07', 'August'],
+	['08', 'September'],
+	['09', 'October'],
+	['10', 'November'],
+	['11', 'December'],
+]);
 const MONTH_ABBR = new Map([
-    ['January', 'Jan'],
-    ['February', 'Feb'],
-    ['March', 'Mar'],
-    ['April', 'Apr'],
-    ['May', 'May'],
-    ['June', 'Jun'],
-    ['July', 'Jul'],
-    ['August', 'Aug'],
-    ['September', 'Sep'],
-    ['October', 'Oct'],
-    ['November', 'Nov'],
-    ['December', 'Dec']
-])
+	['0', 'Jan'],
+	['1', 'Feb'],
+	['2', 'Mar'],
+	['3', 'Apr'],
+	['4', 'May'],
+	['5', 'Jun'],
+	['6', 'Jul'],
+	['7', 'Aug'],
+	['8', 'Sep'],
+	['9', 'Oct'],
+	['10', 'Nov'],
+	['11', 'Dec'],
+]);
 const ALPHA_NUM = new Map([
-    ['1', 'one'],
-    ['2', 'two'],
-    ['3', 'three'],
-    ['4', 'four'],
-    ['5', 'five']
-])
+	['1', 'one'],
+	['2', 'two'],
+	['3', 'three'],
+	['4', 'four'],
+	['5', 'five'],
+]);

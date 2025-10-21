@@ -1,60 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/template.css">
-    <link rel="stylesheet" href="css/plan.css">
-    <title>Budget App 2.0</title>
-</head>
-<body>
-    <div id="nav">
-        <button class="active" onclick="moveToPage(this, [0, 100, 200])">Plan</button>
-        <button onclick="moveToPage(this, [-100, 0, 100])">Expenses</button>
-        <button onclick="moveToPage(this, [-200, -100, 0])">Sinking Funds</button>
-    </div>
-    <div class="page" id="plan_page">
-
-        <table id="plan_table">
-            <tr id="plan_controls">
-                <td colspan="11"><button>Save</button><button>Load</button></td>
-            </tr>
-            <tr id="date-row">
-                <td colspan="11">January 2025</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td></td>
-                <td class="bold">Actual</td>
-            </tr>
-            <tr>
-                <td style="width: 50px"></td>
-                <td class="bold">Categories</td>
-                <td class="bold">Budget</td>
-                <td></td>
-                <td><input type="number" class="weekly-income one" onchange="BUDGET.updateIncome(0, this.value)"></td>
-                <td><input type="number" class="weekly-income two" onchange="BUDGET.updateIncome(1, this.value)"></td>
-                <td><input type="number" class="weekly-income three" onchange="BUDGET.updateIncome(2, this.value)"></td>
-                <td><input type="number" class="weekly-income four" onchange="BUDGET.updateIncome(3, this.value)"></td>
-                <td><input type="number" class="weekly-income five" onchange="BUDGET.updateIncome(4, this.value)"></td>
-                <td class="bold">Left To</td>
-                <td class="bold">Spent</td>
-            </tr>
-            <tr class="section-bar" data-budget-location="0">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="css/template.css" />
+		<link rel="stylesheet" href="css/plan.css" />
+		<link rel="stylesheet" href="css/expense.css" />
+		<title>Budget App 2.0</title>
+	</head>
+	<body>
+		<div id="nav">
+			<button class="active" onclick="moveToPage(this, [0, 100, 200])">Plan</button>
+			<button onclick="moveToPage(this, [-100, 0, 100])">Expenses</button>
+			<button onclick="moveToPage(this, [-200, -100, 0])">Sinking Funds</button>
+		</div>
+		<div id="message_banner">Saved!</div>
+		<div class="page" id="plan_page">
+			<div class="option-box" id="load_options">
+				<div class="close" onclick="closeOptions(this.parentElement)">X</div>
+				<div id="lines_container"><div>No Budgets Saved</div></div>
+			</div>
+			<table id="plan_table">
+				<tr id="plan_controls">
+					<td colspan="11">
+						<button onclick="saveBudget()">Save</button>
+						<button onclick="revealLoadOptions()" id="load_button">Load</button>
+						<button onclick="thisMonth()" id="this_month">This Month</button>
+						<div id="pay_day_drop_con">
+							<label for="pay_day_drop">Pay Day: </label>
+							<select id="pay_day_drop" onchange="setPayDayPreference(this)">
+								<option value="0">Sunday</option>
+								<option value="1">Monday</option>
+								<option value="2" selected>Tuesday</option>
+								<option value="3">Wednesday</option>
+								<option value="4">Thursday</option>
+								<option value="5">Friday</option>
+								<option value="6">Saturday</option>
+							</select>
+						</div>
+						<!-- <button onclick="nextMonth()">Next Month ></button> -->
+					</td>
+				</tr>
+				<tr id="date-row">
+					<td colspan="11" id="budget_name">January 2025</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="pay-day one">0</td>
+					<td class="pay-day two">0</td>
+					<td class="pay-day three">0</td>
+					<td class="pay-day four">0</td>
+					<td class="pay-day five">0</td>
+					<td></td>
+					<td class="bold">Actual</td>
+				</tr>
+				<tr>
+					<td style="width: 50px"></td>
+					<td class="bold">Categories</td>
+					<td class="bold">Budget</td>
+					<td style="width: 50px"></td>
+					<td>
+						<input type="number" class="weekly-income one" onchange="updateIncome(0, this.value)" />
+					</td>
+					<td>
+						<input type="number" class="weekly-income two" onchange="updateIncome(1, this.value)" />
+					</td>
+					<td>
+						<input type="number" class="weekly-income three" onchange="updateIncome(2, this.value)" />
+					</td>
+					<td>
+						<input type="number" class="weekly-income four" onchange="updateIncome(3, this.value)" />
+					</td>
+					<td>
+						<input type="number" class="weekly-income five" onchange="updateIncome(4, this.value)" />
+					</td>
+					<td class="bold">Left To</td>
+					<td class="bold">Spent</td>
+				</tr>
+				<!-- <tr class="section-bar" data-budget-location="0">
                 <td><div class="option-button" onclick="revealOptions(this.parentElement)"><div></div><div></div><div></div></div></td>
                 <td><input type="text" class="input-name" placeholder="Section Name" onchange="sectionNameChanged(this.parentElement.parentElement, this.value)"></td>
                 <td colspan="9"></td>
-            </tr>
-            <tr class="plan-item" data-budget-location="0_0">
-                <td><div class="delete-plan-item" onclick="deletePlanItem(this.parentElement.parentElement)"><img src="trash-can.png"></div></td>
+            </tr> -->
+				<!-- <tr class="plan-item" data-budget-location="0_0">
+                <td>
+                    <div class="item-button delete" onclick="deletePlanItem(this.parentElement.parentElement)"><img src="trash-can.png"></div>
+                    <div class="item-button move" onclick="movePlanItem(this.parentElement.parentElement)">&udarr;</div>
+                </td>
                 <td><input type="text" class="input-name" placeholder="Item Name" onchange="itemNameChanged(this.parentElement.parentElement, this.value)"></td>
                 <td><input type="number" class="budget-amount"></td>
                 <td></td>
@@ -65,60 +100,94 @@
                 <td><input type="number" class="weekly-expense five"></td>
                 <td>0</td>
                 <td>0</td>
-            </tr>
-            <tr id="total_bar">
-                <td colspan="2" class="bold">TOTALS</td>
-                <td></td>
-                <td></td>
-                <td class="weekly-expense-total one">0</td>
-                <td class="weekly-expense-total two">0</td>
-                <td class="weekly-expense-total three">0</td>
-                <td class="weekly-expense-total four">0</td>
-                <td class="weekly-expense-total five">0</td>
-                <td id="total_left_to">0</td>
-                <td id="total_actual_spent">0</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="bold">Total Income</td>
-                <td>------</td>
-                <td id="total_income">0</td>
-                <td colspan="7"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="bold">- Total Budgeted</td>
-                <td>------</td>
-                <td id="total_budgeted">0</td>
-                <td colspan="7"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="bold">= Should Be Zero</td>
-                <td>------</td>
-                <td id="should_be_zero">0</td>
-                <td colspan="7"></td>
-            </tr>
-        </table>
-        <div class="option-box" id="item_options">
-            <div class="close" onclick="closeOptions(this.parentElement)">X</div>
-            <div onclick="addPlanSection(); closeOptions(this.parentElement)">Add Section</div>
-            <div onclick="addPlanItem(); closeOptions(this.parentElement)">Add Item</div>
-            <div onclick="deletePlanSection(); closeOptions(this.parentElement)">Delete</div>
-        </div>
-    </div>
-    <div class="page" id="expenses_page">
+            </tr>  -->
+				<tr id="total_bar">
+					<td colspan="2" class="bold">TOTALS</td>
+					<td id="total_budgeted">0</td>
+					<td></td>
+					<td class="weekly-expense-total one">0</td>
+					<td class="weekly-expense-total two">0</td>
+					<td class="weekly-expense-total three">0</td>
+					<td class="weekly-expense-total four">0</td>
+					<td class="weekly-expense-total five">0</td>
+					<td id="total_left_to">0</td>
+					<td id="total_actual_spent">0</td>
+				</tr>
+				<tr>
+					<td class="bold right" colspan="2">
+						Total Income &horbar;&horbar;&horbar;&horbar;&horbar;&horbar;&horbar;
+					</td>
+					<td id="total_income">0</td>
+					<td></td>
+					<td colspan="7"></td>
+				</tr>
+				<tr>
+					<td class="bold right" colspan="2">
+						Income - Budgeted &horbar;&horbar;&horbar;&horbar;&horbar;&horbar;&horbar;
+					</td>
+					<td id="should_be_zero">0</td>
+					<td></td>
+					<td colspan="7"></td>
+				</tr>
+			</table>
+			<div class="option-box" id="item_options">
+				<div class="close" onclick="closeOptions(this.parentElement)">X</div>
+				<div onclick="addPlanSection(); closeOptions(this.parentElement)">Add Section</div>
+				<div onclick="addPlanItem(); closeOptions(this.parentElement)">Add Item</div>
+				<div onclick="deletePlanSection(); closeOptions(this.parentElement)">Delete Section</div>
+				<div onclick="moveSection(); closeOptions(this.parentElement)" class="move-section-button">
+					Move Section
+				</div>
+			</div>
+		</div>
+		<div class="page" id="expenses_page">
+			<div id="new_expense_form">
+				<div><label for="new_expense_amount">$: </label> <input id="new_expense_amount" type="number" /></div>
 
-    </div>
-    <div class="page" id="sinking_funds_page">
+				<div>
+					<label for="new_expense_date">Date: </label>
+					<div id="new_expense_date" onclick="revealNedDrop(this)"></div>
+				</div>
 
-    </div>
+				<div>
+					<label for="new_expense_location">Location: </label> <input id="new_expense_location" type="text" />
+				</div>
+				<div>
+					<label for="new_expense_type">Type: </label>
+					<select id="new_expense_type"></select>
+				</div>
+				<div>
+					<button onclick="hideExpenseForm()">Cancel</button>
+					<button onclick="submitNewExpense(this.parentElement.parentElement); hideExpenseForm()">
+						Submit
+					</button>
+				</div>
+			</div>
+			<div id="ned_drop">
+				<div onclick="setExpenseDate(this)"></div>
+				<div onclick="setExpenseDate(this)"></div>
+				<div onclick="setExpenseDate(this)"></div>
+				<div onclick="setExpenseDate(this)"></div>
+				<div onclick="setExpenseDate(this)"></div>
+				<div onclick="setExpenseDate(this)"></div>
+				<div onclick="setExpenseDate(this)"></div>
+			</div>
+			<div id="expense_main"></div>
+		</div>
+		<div class="page" id="sinking_funds_page"></div>
 
-    <script src="constants.js"></script>
-    <script src="classes/Budget.js"></script>
-    <script src="classes/PlanSections.js"></script>
-    <script src="classes/PlanItem.js"></script>
-    <script src="classes/ExpenseItem.js"></script>
-    <script src="script.js"></script>
-</body>
+		<div id="lucide_copyright" style="display: none">
+			Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2023 as part of Feather (MIT). All other
+			copyright (c) for Lucide are held by Lucide Contributors 2025.
+		</div>
+
+		<script src="constants.js"></script>
+		<script src="classes/Budget.js"></script>
+		<script src="classes/PlanSections.js"></script>
+		<script src="classes/PlanItem.js"></script>
+		<script src="classes/ExpenseTable.js"></script>
+		<script src="classes/ExpenseSection.js"></script>
+		<script src="classes/ExpenseItem.js"></script>
+		<script src="script.js"></script>
+	</body>
 </html>

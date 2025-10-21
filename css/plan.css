@@ -1,171 +1,294 @@
-#plan_table{
-    margin: 100px 50px 0 50px;
-    width: calc(100% - 100px);
-    /* border: 1px solid black; */
-    border-collapse: collapse;
+#plan_table {
+	margin: 100px 50px 0 50px;
+	width: calc(100% - 100px);
+	/* border: 1px solid black; */
+	border-collapse: collapse;
 }
-#plan_table td{
-    /* border: 1px solid black; */
-    text-align: center;
-
-}
-#plan_table td{
-    padding: 2px 0;
-}
-input[type="number"]{
-    width: calc(100% - 8px);
-    outline: none;
-    text-align: center;
-}
-td:has(input[type="number"]){
-    width: 8%;
-}
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-#plan_table .section-bar td:has(.option-button){
-    position: relative;
-}
-.option-button{
-    justify-self: center;
-    display: none;
-    width: 25px;
-    height: 13px;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: 4px;
-    background-color: rgb(239, 239, 239);
-    border: 1px solid rgba(128, 128, 128, 0.718);
-    cursor: pointer;
+#plan_table td {
+	/* border: 1px solid black; */
+	text-align: center;
+	position: relative;
+	padding: 2px 0;
 }
 
-
-.section-bar:hover .option-button:hover{
-    background-color: rgb(210, 210, 210);
+#plan_controls > td > * {
+	margin: 0 15px;
+	display: inline;
+}
+#plan_controls > td {
+	border: 1px solid black;
 }
 
-.section-bar:hover .option-button{
-    display: flex;
+#pay_day_drop {
+	outline: none;
+	background-color: rgb(242, 242, 242);
+	border-radius: 2px;
 }
 
-.option-button > div{
-    background-color: black;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-
+input[type='number'] {
+	width: calc(100% - 8px);
+	outline: none;
+	text-align: center;
+	border-radius: 0;
+	border: 1px solid black;
+}
+td:has(input[type='number']) {
+	width: 8%;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
 }
 
-
-
-.option-box{
-    width: 120px;
-    height: 150px;
-    background-color: white;
-    position: absolute;
-    top: 100px;
-    left: 100px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black;
-    border-radius: 10px;
-    display: none;
-    overflow: hidden;
-    z-index: 100;
-}
-.option-box.visible{
-    display: block;
-}
-.option-box .close{
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: red;
-    text-align: center;
-    align-content: center;
-    font-size: 13px;
-    cursor: pointer;
-    transition-property: border-radius;
-    transition-duration: 300ms;
-    color: white;
+.option-button {
+	justify-self: center;
+	display: flex;
+	width: 25px;
+	height: 13px;
+	justify-content: space-around;
+	align-items: center;
+	border-radius: 4px;
+	background-color: rgb(239, 239, 239);
+	border: 1px solid rgba(128, 128, 128, 0.718);
+	cursor: pointer;
+	position: relative;
+	opacity: 0;
+	transition: opacity 200ms;
 }
 
-.option-box div{
-    width: 100%;
-    height: calc(100% / 3);
-    text-align: center;
-    align-content: center;
-    /* border: 1px solid black; */
-    transition: background-color 200ms;
-    cursor: pointer;
-}
-#item_options > div:not(.close):hover{
-    background-color: rgba(175, 175, 175, 0.527);
-}
-.option-box .close:hover{
-    background-color: red;
-    border-radius: 0;
-}
-.delete-plan-item{
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
-    background-color: rgb(239, 239, 239);
-    border: 1px solid rgba(128, 128, 128, 0.718);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    align-self: center;
-    justify-self: center;
-}
-.delete-plan-item img{
-    /* position: relative;
-    right: 1px;
-    bottom: 1px; */
-    width: 14px;
-    height: 14px;
-}
-#plan_table .plan-item:hover .delete-plan-item{
-    display: flex;
-}
-#plan_table .plan-item:hover .delete-plan-item:hover{
-    background-color: rgb(210, 210, 210);
-}
-#plan_table tr:nth-child(even):not(.section-bar){
-    background-color: var(--darkLineColor);
-}
-.section-bar{
-    background-color: var(--accent);
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-}
-#plan_table .input-name{
-    outline: none;
-    border: none;
-    background-color: rgba(0, 0, 0, 0);
-    text-align: center;
-    color: var(--textBlack);
-    font-size: 15px;
-    width: calc(100% - 7px);
-}
-#plan_table .plan-item .input-name::placeholder{
-    color: var(--textBlack);
-
-}
-#plan_table .section-bar .input-name::placeholder, #plan_table .section-bar .input-name{
-    color: var(--textWhite);
-
+.section-bar:hover .option-button:hover {
+	background-color: rgb(210, 210, 210);
 }
 
-#total_bar{
-    border-top: 4px double black;
+.section-bar:hover .option-button {
+	opacity: 1;
 }
-#should_be_zero{
-    border: 1px solid black;
-    width: 45px;
+
+.option-button > div {
+	background-color: black;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+}
+
+.option-box {
+	width: 120px;
+	height: 150px;
+	background-color: white;
+	position: absolute;
+	top: 100px;
+	left: 100px;
+	flex-direction: column;
+	border: 1px solid black;
+	border-radius: 10px;
+	display: none;
+	overflow: hidden;
+	z-index: 100;
+}
+.option-box.visible {
+	display: block;
+}
+.option-box .close {
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: red;
+	text-align: center;
+	align-content: center;
+	font-size: 13px;
+	cursor: pointer;
+	transition-property: border-radius;
+	transition-duration: 300ms;
+	color: white;
+}
+
+.option-box div {
+	width: 100%;
+	height: calc(100% / 4);
+	text-align: center;
+	align-content: center;
+	/* border: 1px solid black; */
+	transition: background-color 200ms;
+	cursor: pointer;
+}
+#item_options > div:not(.close):hover,
+#lines_container > div:hover {
+	background-color: rgba(175, 175, 175, 0.527);
+}
+.option-box .close:hover {
+	background-color: red;
+	border-radius: 0;
+}
+td:has(.item-button) {
+	display: inline-flex;
+	justify-content: space-around;
+	/* align-items: center; */
+	width: stretch;
+	/* height: stretch; */
+	padding: -1px 0;
+}
+.item-button {
+	width: 19px;
+	height: 19px;
+	box-sizing: border-box;
+	border-radius: 2px;
+	background-color: rgb(239, 239, 239);
+	border: 1px solid rgba(128, 128, 128, 0.718);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 700;
+	position: relative;
+	margin: 0;
+}
+.item-button img {
+	width: 14px;
+}
+#this_month,
+#pay_day_drop_con {
+	position: relative;
+}
+.item-button:hover::after,
+.option-button:hover::after,
+#this_month:hover::after,
+#pay_day_drop_con:has(#pay_day_drop:hover)::after {
+	content: 'Set the day you get paid on';
+	position: absolute;
+	left: 100%;
+	top: 15px;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 2px 5px;
+	text-wrap: nowrap;
+	z-index: 100;
+	font-weight: 500;
+}
+
+#this_month:hover::after {
+	content: 'Navigate to current month / Create new budget';
+}
+
+.item-button.move:hover::after {
+	content: 'Move Item';
+}
+.item-button.delete:hover::after {
+	content: 'Delete Item';
+}
+.option-button:hover::after {
+	content: 'Section Options';
+}
+#plan_table .plan-item:hover .item-button {
+	display: inline-flex;
+}
+#plan_table .plan-item:hover .item-button:hover {
+	background-color: rgb(220, 220, 220);
+}
+#plan_table .plan-item:nth-child(even) {
+	background-color: var(--darkLineColor);
+}
+.section-bar {
+	background-color: var(--accent);
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+#plan_table .input-name {
+	outline: none;
+	border: none;
+	background-color: rgba(0, 0, 0, 0);
+	text-align: center;
+	color: var(--textBlack);
+	font-size: 15px;
+	width: calc(100% - 7px);
+}
+#plan_table .plan-item .input-name::placeholder {
+	color: var(--textBlack);
+}
+#plan_table .section-bar .input-name::placeholder,
+#plan_table .section-bar .input-name {
+	color: var(--textWhite);
+}
+
+#total_bar {
+	border-top: 5px double black;
+}
+#should_be_zero,
+#total_income {
+	border: 1px solid black;
+}
+#budget_name {
+	font-weight: 600;
+	font-size: 18px;
+}
+#load_options {
+	top: 125px;
+	left: 40%;
+	overflow-y: hidden;
+}
+#load_options #lines_container {
+	width: 100%;
+	height: 130px;
+	overflow-y: auto;
+	position: absolute;
+	bottom: 0;
+	align-content: start;
+}
+#load_options > div:not(.close) {
+	cursor: default;
+}
+#lines_container > div {
+	cursor: pointer;
+	border-radius: 0;
+	height: auto;
+}
+
+#plan_page td.right {
+	text-align: right;
+}
+.move-marker {
+	position: absolute;
+	width: 50px;
+	height: 20px;
+
+	left: 1px;
+	translate: 0 -50%;
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	transition: left 200ms;
+}
+.move-marker div:nth-child(1) {
+	width: 15px;
+	height: 15px;
+	border-radius: 10px;
+	background-color: var(--accent);
+	position: relative;
+	left: 5px;
+}
+.move-marker:hover {
+	left: 5px;
+}
+.move-marker div:nth-child(2) {
+	width: 0;
+	height: 0;
+	border-top: 7px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-left: 10px solid var(--accent);
+}
+.move-marker div:nth-child(3) {
+	width: 20px;
+	height: 1px;
+	background-color: black;
+}
+#plan_page .move-focus {
+	/* outline: 2px solid white;
+    border-radius: 2px; */
+	box-shadow: inset 0 0 0 2px white;
+	border-color: #0000;
 }
