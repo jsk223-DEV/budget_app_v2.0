@@ -1,72 +1,75 @@
 #plan_table {
 	margin: 100px 50px 0 50px;
 	width: calc(100% - 100px);
-	/* border: 1px solid black; */
 	border-collapse: collapse;
 }
 #plan_table td {
-	/* border: 1px solid black; */
 	text-align: center;
 	position: relative;
 	padding: 2px 0;
 }
 
 #plan_controls > td > * {
-	margin: 0 15px;
 	display: inline;
-}
-#plan_controls > td {
-	border: 1px solid black;
+	margin: 0 10px;
 }
 
-#pay_day_drop {
+#plan_controls {
+	/* border: 1px solid var(--mainBorder); */
+	background-color: var(--darkLineColor);
+}
+
+#pay_day_drop,
+#plan_controls > td > button {
 	outline: none;
-	background-color: rgb(242, 242, 242);
-	border-radius: 2px;
+	background-color: var(--buttonBG);
+	border: 1px solid black;
+	border-radius: var(--commonBorderRadius);
+	color: var(--buttonTextC);
+}
+#pay_day_drop:hover,
+#plan_controls > td > button:hover {
+	background-color: var(--buttonHoverBG);
 }
 
-input[type='number'] {
+#plan_page input[type='number'] {
 	width: calc(100% - 8px);
 	outline: none;
 	text-align: center;
-	border-radius: 0;
-	border: 1px solid black;
+	border-radius: var(--commonBorderRadius);
+	border: 1px solid var(--mainBorder);
+	font-size: 15px;
 }
-td:has(input[type='number']) {
+#plan_page td:has(input[type='number']) {
 	width: 8%;
-}
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
 }
 
 .option-button {
+	padding: 0;
 	justify-self: center;
-	display: flex;
+	display: none;
 	width: 25px;
-	height: 13px;
-	justify-content: space-around;
+	height: 19px;
+	justify-content: center;
 	align-items: center;
+	gap: 4px;
 	border-radius: 4px;
-	background-color: rgb(239, 239, 239);
-	border: 1px solid rgba(128, 128, 128, 0.718);
+	background-color: var(--buttonBG);
+	border: 1px solid var(--mainBorder);
 	cursor: pointer;
 	position: relative;
-	opacity: 0;
-	transition: opacity 200ms;
 }
 
-.section-bar:hover .option-button:hover {
-	background-color: rgb(210, 210, 210);
+.section-bar:hover .option-button:not(.option-button:disabled):hover {
+	background-color: var(--buttonHoverBG);
 }
 
 .section-bar:hover .option-button {
-	opacity: 1;
+	display: flex;
 }
 
-.option-button > div {
-	background-color: black;
+.option-button > span {
+	background-color: var(--buttonTextC);
 	width: 3px;
 	height: 3px;
 	border-radius: 50%;
@@ -75,12 +78,13 @@ input[type='number']::-webkit-outer-spin-button {
 .option-box {
 	width: 120px;
 	height: 150px;
-	background-color: white;
+	background-color: var(--optionBG);
+
 	position: absolute;
 	top: 100px;
 	left: 100px;
-	flex-direction: column;
-	border: 1px solid black;
+	align-content: end;
+	border: 1px solid var(--mainBorder);
 	border-radius: 10px;
 	display: none;
 	overflow: hidden;
@@ -96,31 +100,33 @@ input[type='number']::-webkit-outer-spin-button {
 	position: absolute;
 	top: 0;
 	right: 0;
-	background-color: red;
+	background-color: var(--accent);
 	text-align: center;
 	align-content: center;
 	font-size: 13px;
 	cursor: pointer;
 	transition-property: border-radius;
 	transition-duration: 300ms;
-	color: white;
+	color: var(--textOnAccent);
 }
 
 .option-box div {
 	width: 100%;
-	height: calc(100% / 4);
+	height: calc(100% / 4 - 5px);
 	text-align: center;
 	align-content: center;
+	font-size: 14px;
 	/* border: 1px solid black; */
 	transition: background-color 200ms;
 	cursor: pointer;
+	color: var(--textOnOption);
 }
 #item_options > div:not(.close):hover,
 #lines_container > div:hover {
-	background-color: rgba(175, 175, 175, 0.527);
+	background-color: var(--optionButtonHover);
 }
 .option-box .close:hover {
-	background-color: red;
+	background-color: var(--accent);
 	border-radius: 0;
 }
 td:has(.item-button) {
@@ -136,8 +142,8 @@ td:has(.item-button) {
 	height: 19px;
 	box-sizing: border-box;
 	border-radius: 2px;
-	background-color: rgb(239, 239, 239);
-	border: 1px solid rgba(128, 128, 128, 0.718);
+	background-color: var(--buttonBG);
+	border: 1px solid var(--mainBorder);
 	display: none;
 	justify-content: center;
 	align-items: center;
@@ -147,88 +153,64 @@ td:has(.item-button) {
 	position: relative;
 	margin: 0;
 }
-.item-button img {
+.item-button img,
+.item-button svg {
 	width: 14px;
 }
 #this_month,
 #pay_day_drop_con {
 	position: relative;
 }
-.item-button:hover::after,
-.option-button:hover::after,
-#this_month:hover::after,
-#pay_day_drop_con:has(#pay_day_drop:hover)::after {
-	content: 'Set the day you get paid on';
-	position: absolute;
-	left: 100%;
-	top: 15px;
-	background-color: white;
-	border: 1px solid black;
-	border-radius: 5px;
-	padding: 2px 5px;
-	text-wrap: nowrap;
-	z-index: 100;
-	font-weight: 500;
-}
-
-#this_month:hover::after {
-	content: 'Navigate to current month / Create new budget';
-}
-
-.item-button.move:hover::after {
-	content: 'Move Item';
-}
-.item-button.delete:hover::after {
-	content: 'Delete Item';
-}
-.option-button:hover::after {
-	content: 'Section Options';
-}
 #plan_table .plan-item:hover .item-button {
 	display: inline-flex;
 }
-#plan_table .plan-item:hover .item-button:hover {
-	background-color: rgb(220, 220, 220);
+#plan_table .plan-item:hover .item-button:not(.item-button:disabled):hover {
+	background-color: var(--buttonHoverBG);
 }
 #plan_table .plan-item:nth-child(even) {
-	background-color: var(--darkLineColor);
+	background-color: var(--midground);
 }
 .section-bar {
 	background-color: var(--accent);
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
+	border-top: 1px solid var(--mainBorder);
+	border-bottom: 1px solid var(--mainBorder);
 }
 #plan_table .input-name {
 	outline: none;
 	border: none;
 	background-color: rgba(0, 0, 0, 0);
 	text-align: center;
-	color: var(--textBlack);
+	color: var(--textOnBG);
 	font-size: 15px;
 	width: calc(100% - 7px);
 }
 #plan_table .plan-item .input-name::placeholder {
-	color: var(--textBlack);
+	color: var(--textOnBG);
 }
 #plan_table .section-bar .input-name::placeholder,
 #plan_table .section-bar .input-name {
-	color: var(--textWhite);
+	color: var(--textOnAccent);
 }
 
 #total_bar {
-	border-top: 5px double black;
+	border-top: 5px double var(--mainBorder);
 }
-#should_be_zero,
-#total_income {
-	border: 1px solid black;
-}
+
 #budget_name {
 	font-weight: 600;
-	font-size: 18px;
+	font-size: 19px;
+	letter-spacing: 2px;
+}
+#load_button {
+	position: relative;
+	anchor-name: --loadButton;
 }
 #load_options {
 	top: 125px;
-	left: 40%;
+	left: 34%;
+	position-anchor: --loadButton;
+	top: anchor(bottom);
+	left: anchor(left);
 	overflow-y: hidden;
 }
 #load_options #lines_container {
@@ -246,6 +228,7 @@ td:has(.item-button) {
 	cursor: pointer;
 	border-radius: 0;
 	height: auto;
+	color: var(--textOnOption);
 }
 
 #plan_page td.right {
@@ -284,11 +267,15 @@ td:has(.item-button) {
 .move-marker div:nth-child(3) {
 	width: 20px;
 	height: 1px;
-	background-color: black;
+	background-color: var(--mainBorder);
 }
 #plan_page .move-focus {
 	/* outline: 2px solid white;
     border-radius: 2px; */
-	box-shadow: inset 0 0 0 2px white;
+	box-shadow: inset 0 0 0 2px var(--accentBorder);
 	border-color: #0000;
+}
+
+.weekly-expense:disabled {
+	color: var(--textBlack);
 }

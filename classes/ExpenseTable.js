@@ -43,10 +43,17 @@ class ExpenseTable {
 				<caption>${this.name}</caption>
 				<tr class="control-row">
 					<td colspan="3">
-						<button onclick="showExpenseForm()" class="show-expense-form">+ New Expense</button>
-						<button onclick="BUDGET.expenseTables[${this.index}].transferTotals()" class="transfer-totals">Transfer Totals</button>
-						<button onclick="lastWeek(); hideExpenseForm()">&larr;</button>      
-						<button onclick="nextWeek(); hideExpenseForm()">&rarr;</button>
+						<button ${
+							BUDGET.readOnly ? 'disabled' : ''
+						}  onclick="showExpenseForm(false)" class="show-expense-form" id="new_expense_button">+ New Expense</button>
+						<button ${
+							BUDGET.readOnly ? 'disabled' : ''
+						}  onclick="showExpenseForm(true)" class="show-expense-form" id="new_expense_button_oos">+ New Expense From Sinking Fund</button>
+						<button ${BUDGET.readOnly ? 'disabled' : ''}  data-hover="Transfer totals over to Plan" onclick="BUDGET.expenseTables[${
+			this.index
+		}].transferTotals()" class="transfer-totals">Transfer Totals</button>
+						<button data-hover="Last Week" onclick="lastWeek(); hideExpenseForm()">&larr;</button>      
+						<button data-hover="Next Week" onclick="nextWeek(); hideExpenseForm()">&rarr;</button>
 					</td>
 				</tr>
 				<tr class="expense-categories">
@@ -77,23 +84,43 @@ class ExpenseTable {
 			let section = BUDGET.planSections[i];
 			for (let j = 0; j < section.planItems.length; j++) {
 				section.planItems[j].weeklyTotals[this.index] = 0;
+				section.planItems[j].updateLTAS();
 			}
 		}
+		for (let i = 0; i < BUDGET.planFundSection.planItems.length; i++) {
+			BUDGET.planFundSection.planItems[i].weeklyTotals[this.index] = 0;
+			BUDGET.planFundSection.planItems[i].updateLTAS();
+		}
 		for (let i = 0; i < this.expenseSections.length; i++) {
+			let found = false;
 			for (let j = 0; j < BUDGET.planSections.length; j++) {
 				let section = BUDGET.planSections[j];
 				for (let x = 0; x < section.planItems.length; x++) {
 					let planItem = section.planItems[x];
 					if (planItem.name === this.expenseSections[i].name) {
 						planItem.weeklyTotals[this.index] = this.expenseSections[i].typeTotal;
-						planItem.updateLTAS(
-							document.querySelector('#plan_page [data-budget-location="' + j + '_' + x + '"]')
-						);
+						planItem.updateLTAS();
+						found = true;
+						j = Infinity;
+						x = Infinity;
+					}
+				}
+			}
+			if (!found) {
+				for (let j = 0; j < BUDGET.planFundSection.planItems.length; j++) {
+					let planItem = BUDGET.planFundSection.planItems[j];
+					if (planItem.name === this.expenseSections[i].name) {
+						planItem.weeklyTotals[this.index] = this.expenseSections[i].typeTotal;
+						planItem.updateLTAS();
+						found = true;
+						j = Infinity;
 					}
 				}
 			}
 		}
+
 		BUDGET.renderPlanSections();
+		BUDGET.renderFundSection();
 		showMessageBanner('Expense totals for ' + this.name + ' carried over to plan.');
 	}
 }

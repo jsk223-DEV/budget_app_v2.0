@@ -1,31 +1,59 @@
 class PlanItem {
-	constructor(object, index) {
+	constructor(object, index, sinking) {
 		this.name = object.name || '';
 		this.budgetAmount = object.budgetAmount || 0;
 		this.weeklyTotals = object.weeklyTotals || [0, 0, 0, 0, 0];
 		this.leftTo = object.leftTo || 0;
 		this.actualSpent = object.actualSpent || 0;
 		this.index = index == undefined ? object.index : index;
+		this.sinking = sinking ? true : false;
 	}
 	render(sectIndex) {
 		let item = document.createElement('tr');
 		item.classList.add('plan-item');
 		item.dataset.budgetLocation = sectIndex + '_' + this.index;
-		item.innerHTML = /* html */ `
-        <!-- <td><div class="item-button delete" onclick="deletePlanItem(this.parentElement.parentElement)"><img src="trash-can.png"></div><div class="item-button move" onclick="movePlanItem(this.parentElement.parentElement)">&udarr;</div></td> -->
-        <td>
-            <div class="item-button delete" onclick="deletePlanItem(this.parentElement.parentElement)"><img src="assets/trashcan.svg"></div>
-            <div class="item-button move" onclick="movePlanItem(this.parentElement.parentElement)"><img src="assets/updownarr.svg"></div></td>
-        <td><input type="text" class="input-name" placeholder="Item Name" value="${this.name}" onchange="itemNameChanged(this.parentElement.parentElement, this.value)"></td>
-        <td><input type="number" class="budget-amount" onchange="updateBudgetAmount(this.parentElement.parentElement, this.value)"></td>
-        <td></td>
-        <td><input type="number" class="weekly-expense one" onchange="updateWeeklyTotal(0, this.value, this.parentElement.parentElement)"></td>
-        <td><input type="number" class="weekly-expense two" onchange="updateWeeklyTotal(1, this.value, this.parentElement.parentElement)"></td>
-        <td><input type="number" class="weekly-expense three" onchange="updateWeeklyTotal(2, this.value, this.parentElement.parentElement)"></td>
-        <td><input type="number" class="weekly-expense four" onchange="updateWeeklyTotal(3, this.value, this.parentElement.parentElement)"></td>
-        <td><input type="number" class="weekly-expense five" onchange="updateWeeklyTotal(4, this.value, this.parentElement.parentElement)"></td>
-        <td class="left-to">${this.leftTo}</td>
-        <td class="actual-spent">${this.actualSpent}</td>`;
+		if (this.sinking) {
+			item.classList.add('plan-fund-item');
+			item.innerHTML = /* html */ `
+				<td></td>
+				<td><input type="text" class="input-name" placeholder="Item Name" value="${this.name}" disabled></td>
+				<td><input ${
+					BUDGET.readOnly ? 'disabled' : ''
+				} type="number" class="budget-amount" onchange="updateBudgetAmount(this.parentElement.parentElement, this.value, true)"></td>
+				<td></td>
+				<td><input disabled type="number" class="weekly-expense one" onchange="updateWeeklyTotal(0, this.value, this.parentElement.parentElement, true)"></td>
+				<td><input disabled type="number" class="weekly-expense two" onchange="updateWeeklyTotal(1, this.value, this.parentElement.parentElement, true)"></td>
+				<td><input disabled type="number" class="weekly-expense three" onchange="updateWeeklyTotal(2, this.value, this.parentElement.parentElement, true)"></td>
+				<td><input disabled type="number" class="weekly-expense four" onchange="updateWeeklyTotal(3, this.value, this.parentElement.parentElement, true)"></td>
+				<td><input disabled type="number" class="weekly-expense five" onchange="updateWeeklyTotal(4, this.value, this.parentElement.parentElement, true)"></td>
+				<td class="left-to">${this.leftTo}</td>
+				<td class="actual-spent">${this.actualSpent}</td>`;
+		} else {
+			// <img class="move" src="assets/updownarr.svg">
+			// <svg xmlns="http://www.w3.org/2000/svg" class="move"><use href="#updownarr"></use></svg>
+			item.innerHTML = /* html */ `
+				<td>
+					<button ${
+						BUDGET.readOnly ? 'disabled' : ''
+					} data-hover="Delete Item" class="item-button delete" onclick="deletePlanItem(this.parentElement.parentElement)"><img src="assets/trashcan.svg"></button>
+					<button ${
+						BUDGET.readOnly ? 'disabled' : ''
+					} data-hover="Move Item" class="item-button move" onclick="movePlanItem(this.parentElement.parentElement)"><img class="move" src="assets/updownarr.svg"></button></td>
+				<td><input ${BUDGET.readOnly ? 'disabled' : ''} type="text" class="input-name" placeholder="Item Name" value="${
+				this.name
+			}" onchange="itemNameChanged(this.parentElement.parentElement, this.value)"></td>
+				<td><input ${
+					BUDGET.readOnly ? 'disabled' : ''
+				} type="number" class="budget-amount" onchange="updateBudgetAmount(this.parentElement.parentElement, this.value)"></td>
+				<td></td>
+				<td><input disabled type="number" class="weekly-expense one" onchange="updateWeeklyTotal(0, this.value, this.parentElement.parentElement)"></td>
+				<td><input disabled type="number" class="weekly-expense two" onchange="updateWeeklyTotal(1, this.value, this.parentElement.parentElement)"></td>
+				<td><input disabled type="number" class="weekly-expense three" onchange="updateWeeklyTotal(2, this.value, this.parentElement.parentElement)"></td>
+				<td><input disabled type="number" class="weekly-expense four" onchange="updateWeeklyTotal(3, this.value, this.parentElement.parentElement)"></td>
+				<td><input disabled type="number" class="weekly-expense five" onchange="updateWeeklyTotal(4, this.value, this.parentElement.parentElement)"></td>
+				<td class="left-to">${this.leftTo}</td>
+				<td class="actual-spent">${this.actualSpent}</td>`;
+		}
 
 		let weeklyExpenseEles = item.querySelectorAll('.weekly-expense');
 		for (let i = 0; i < weeklyExpenseEles.length; i++) {
@@ -41,16 +69,16 @@ class PlanItem {
 	}
 
 	updateLTAS(row) {
-		let leftToEle = row.querySelector('.left-to');
-		let actualSpentEle = row.querySelector('.actual-spent');
 		let totalSpent = 0;
 		for (let i = 0; i < this.weeklyTotals.length; i++) {
 			totalSpent += this.weeklyTotals[i];
 		}
 		this.actualSpent = totalSpent;
-		actualSpentEle.innerText = this.actualSpent;
 		this.leftTo = this.budgetAmount - totalSpent;
-		leftToEle.innerText = this.leftTo;
+		if (row) {
+			row.querySelector('.left-to').innerText = this.leftTo;
+			row.querySelector('.actual-spent').innerText = this.actualSpent;
+		}
 		BUDGET.updateTotals();
 	}
 	clearWeeklyTotals() {
@@ -61,15 +89,19 @@ class PlanItem {
 		this.actualSpent = 0;
 	}
 }
-function updateBudgetAmount(row, value) {
+function updateBudgetAmount(row, value, sunk) {
 	let location = row.dataset.budgetLocation.split('_');
-	let item = BUDGET.planSections[location[0]].planItems[location[1]];
+	let item = sunk
+		? BUDGET.planFundSection.planItems[location[1]]
+		: BUDGET.planSections[location[0]].planItems[location[1]];
 	item.budgetAmount = Number(value);
 	item.updateLTAS(row);
 }
-function updateWeeklyTotal(index, value, row) {
+function updateWeeklyTotal(index, value, row, sunk) {
 	let location = row.dataset.budgetLocation.split('_');
-	let item = BUDGET.planSections[location[0]].planItems[location[1]];
+	let item = sunk
+		? BUDGET.planFundSection.planItems[location[1]]
+		: BUDGET.planSections[location[0]].planItems[location[1]];
 	item.weeklyTotals[index] = Number(value);
 	item.updateLTAS(row);
 }

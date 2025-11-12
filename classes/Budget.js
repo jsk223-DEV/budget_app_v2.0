@@ -1,9 +1,10 @@
 class Budget {
 	constructor(object, index) {
 		let d = new Date();
-		this.name = '';
+		this.name = object.name || '';
 		this.date = object.date || { month: d.getMonth(), year: d.getFullYear() };
-		this.autoSave = object.autoSave || true;
+		this.autoSave = object.autoSave != undefined ? object.autoSave : true;
+		this.readOnly = object.readOnly != undefined ? object.readOnly : false;
 		this.payDayPreference = object.payDayPreference || 2;
 		this.payDays = object.payDays || [0, 0, 0, 0, 0];
 		this.weeklyIncomes = object.weeklyIncomes || [0, 0, 0, 0, 0];
@@ -13,7 +14,11 @@ class Budget {
 		this.totalLeftTo = object.totalLeftTo || 0;
 		this.totalActualSpent = object.totalActualSpent || 0;
 		this.planSections = object ? [] : [new PlanSection(false, 0)];
+		this.planFundSection = object.planFundSection
+			? new PlanSection(object.planFundSection, undefined, true)
+			: new PlanSection({ name: 'Sinking Funds' }, undefined, true);
 		this.expenseTables = [];
+		this.sinkingFunds = [];
 		this.totalBar = {
 			bar: document.querySelector('#plan_page #total_bar'),
 			totalBudgeted: document.querySelector('#plan_page #total_budgeted'),
@@ -24,35 +29,93 @@ class Budget {
 			shouldBeZero: document.querySelector('#plan_table #should_be_zero'),
 		};
 		this.index = index == undefined ? object.index : index;
-		if (object) {
+		if (object.planSections) {
 			for (let i = 0; i < object.planSections.length; i++) {
 				this.planSections.push(new PlanSection(object.planSections[i]));
 			}
+		}
+		if (object.expenseTables) {
 			for (let i = 0; i < object.expenseTables.length; i++) {
 				this.expenseTables.push(new ExpenseTable(object.expenseTables[i], i));
 			}
-		} else {
 		}
+		if (object.sinkingFunds) {
+			for (let i = 0; i < object.sinkingFunds.length; i++) {
+				this.sinkingFunds.push(new SinkingFund(object.sinkingFunds[i], i));
+			}
+		}
+		if (this.readOnly) {
+			this.setToReadOnly();
+		} else if (!this.readOnly) {
+			let wkinEles = document.querySelectorAll('#plan_page .weekly-income');
+			for (let i = 0; i < wkinEles.length; i++) {
+				wkinEles[i].removeAttribute('disabled');
+			}
+			document.querySelector('#sinking_funds_page #new_sinking_fund').removeAttribute('disabled');
+		}
+	}
+
+	setToReadOnly() {
+		this.readOnly = true;
+		document.querySelector('#plan_page #budget_name').innerText += ' (Read Only)';
+		let wkinEles = document.querySelectorAll('#plan_page .weekly-income');
+		for (let i = 0; i < wkinEles.length; i++) {
+			wkinEles[i].setAttribute('disabled', '');
+		}
+		document.querySelector('#sinking_funds_page #new_sinking_fund').setAttribute('disabled', '');
 	}
 
 	updateName() {
 		this.name = MONTH_LOOKUP.get(this.date.month.toString().padStart(2, '0')) + ' ' + this.date.year;
+		if (this.readOnly) {
+			this.name += ' (Read Only)';
+		}
 		document.querySelector('#plan_page #budget_name').innerText = this.name;
 	}
 
 	render() {
 		this.renderPlanSections();
 		this.renderExpenseTables();
+		this.renderSinkingFunds();
+
+		this.renderFundSection();
+	}
+
+	renderFundSection() {
+		let oldSpacer = document.querySelector('#plan_page .spacer');
+		if (oldSpacer) {
+			oldSpacer.remove();
+		}
+		let oldItems = document.querySelectorAll(
+			'#plan_page .section-bar.plan-fund-section, #plan_page .plan-item.plan-fund-item'
+		);
+		for (let i = 0; i < oldItems.length; i++) {
+			oldItems[i].remove();
+		}
+		if (this.planFundSection.planItems.length < 1) {
+			return;
+		}
+		let spacer = document.createElement('tr');
+		spacer.classList.add('spacer');
+		spacer.innerHTML = /*html*/ `
+			<td colspan="11"></td>
+		`;
+		this.totalBar.bar.before(spacer);
+		this.planFundSection.render(this.totalBar.bar);
 	}
 
 	renderPlanSections() {
-		let oldSections = document.querySelectorAll('#plan_page .section-bar, #plan_page .plan-item');
+		let oldSections = document.querySelectorAll(
+			'#plan_page .section-bar:not(.plan-fund-section), #plan_page .plan-item:not(.plan-fund-item)'
+		);
 
 		for (let i = 0; i < oldSections.length; i++) {
 			oldSections[i].remove();
 		}
+		let fundSection = document.querySelector('#plan_page .spacer');
+		let before = fundSection || this.totalBar.bar;
 		for (let i = 0; i < this.planSections.length; i++) {
-			this.planSections[i].render(this.totalBar.bar);
+			this.planSections[i].render(before);
 		}
 	}
 
@@ -67,11 +130,24 @@ class Budget {
 		}
 	}
 
+	renderSinkingFunds() {
+		let oldFunds = document.querySelectorAll('#sinking_main .sinking-fund');
+
+		for (let i = 0; i < oldFunds.length; i++) {
+			oldFunds[i].remove();
+		}
+		for (let i = 0; i < this.sinkingFunds.length; i++) {
+			this.sinkingFunds[i].index = i;
+			this.sinkingFunds[i].render();
+		}
+	}
+
 	clearBudgetValues() {
 		this.weeklyIncomes = [0, 0, 0, 0, 0];
 		for (let i = 0; i < this.planSections.length; i++) {
 			this.planSections[i].clearItemValues();
 		}
+		this.planFundSection.clearItemValues();
 		this.updateTotals();
 	}
 
@@ -101,6 +177,15 @@ class Budget {
 				for (let w = 0; w < this.weeklyExpenseTotals.length; w++) {
 					this.weeklyExpenseTotals[w] += pItem.weeklyTotals[w];
 				}
+			}
+		}
+		for (let i = 0; i < this.planFundSection.planItems.length; i++) {
+			let item = this.planFundSection.planItems[i];
+			this.totalBudgeted += item.budgetAmount;
+			this.totalLeftTo += item.leftTo;
+			this.totalActualSpent += item.actualSpent;
+			for (let w = 0; w < this.weeklyExpenseTotals.length; w++) {
+				this.weeklyExpenseTotals[w] += item.weeklyTotals[w];
 			}
 		}
 		for (let i = 0; i < this.weeklyIncomes.length; i++) {

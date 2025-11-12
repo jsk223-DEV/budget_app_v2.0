@@ -1,5 +1,6 @@
 class ExpenseItem {
 	constructor(object) {
+		this.fullDate = object.fullDate || '';
 		this.date = object.date || '';
 		this.amount = object.amount || 0;
 		this.location = object.location || '';
@@ -13,20 +14,18 @@ class ExpenseItem {
 		newRow.dataset.index = this.index;
 		newRow.classList.add('expense-item');
 
-		let dateCell = document.createElement('td');
-		dateCell.classList.add('expense-date');
-		dateCell.innerHTML = /*html*/ `<button class="delete-expense" onclick="deleteExpense(this.parentElement.parentElement)"><img src="assets/trashcan.svg"></button> ${this.date}`;
-		newRow.appendChild(dateCell);
-
-		let amountCell = document.createElement('td');
-		amountCell.classList.add('expense-dollar');
-		amountCell.innerText = this.amount;
-		newRow.appendChild(amountCell);
-
-		let locationCell = document.createElement('td');
-		locationCell.classList.add('expense-location');
-		locationCell.innerText = this.location;
-		newRow.appendChild(locationCell);
+		newRow.innerHTML = /*html*/ `
+			<td class="expense-date">
+				<button ${
+					BUDGET.readOnly ? 'disabled' : ''
+				} data-hover="Delete Expense" class="delete-expense" onclick="deleteExpense(this.parentElement.parentElement)">
+					<img src="assets/trashcan.svg">
+				</button>
+				${this.date}
+			</td>
+			<td class="expense-dollar">${this.amount}</td>
+			<td class="expense-location">${this.location}</td>
+		`;
 
 		sectionRow.after(newRow);
 	}

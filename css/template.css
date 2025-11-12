@@ -1,10 +1,70 @@
-:root {
+body.dark-theme {
 	--accent: red;
-	--background: rgb(210, 210, 210);
-	--textBlack: black;
-	--textWhite: white;
-	--darkLineColor: rgb(190, 190, 190);
+	--textOnAccent: white;
+	--accentBorder: white;
+
+	--background: hsl(0 0 10%);
+	--midground: hsl(0 0 20%);
+	--forground: hsl(0 0 90%);
+	--textOnBG: white;
+
+	--darkLineColor: var(--midground);
 	--lightLineColor: var(--background);
+
+	--optionBG: white;
+	--optionButtonHover: hsl(0 0 90%);
+	--textOnOption: black;
+
+	--buttonBG: hsl(0, 0%, 85%);
+	--buttonTextC: black;
+	--buttonHoverBG: hsl(0, 0%, 100%);
+
+	--mainBorder: black;
+	--commonBorderRadius: 2px;
+
+	--inputBorder: rgb(60, 60, 60, 0.6);
+	--inputColor: black;
+
+	--disabledButtonOpacity: 0.4;
+
+	--disabledInputBG: hsl(0 0 50%);
+	--disabledInputC: white;
+}
+body.light-theme {
+	--accent: red;
+	--textOnAccent: white;
+	--accentBorder: white;
+
+	--background: hsl(0, 0%, 90%);
+	--midground: hsl(0 0 80%);
+	--forground: hsl(0 0 80%);
+	--textOnBG: black;
+
+	--darkLineColor: var(--midground);
+	--lightLineColor: var(--background);
+
+	--optionBG: white;
+	--optionButtonHover: hsl(0 0 90%);
+	--textOnOption: black;
+
+	--buttonBG: hsl(0, 0%, 100%);
+	--buttonTextC: black;
+	--buttonHoverBG: hsl(0, 0%, 90%);
+
+	--mainBorder: black;
+	--commonBorderRadius: 2px;
+
+	--inputBorder: rgb(60, 60, 60, 0.6);
+	--inputColor: black;
+
+	--disabledButtonOpacity: 0.4;
+
+	--disabledInputBG: hsl(0 0 70%);
+	--disabledInputC: white;
+}
+* {
+	font-family: 'Courier Prime', monospace;
+	color: var(--textOnBG);
 }
 body {
 	/* display: flex; */
@@ -18,7 +78,7 @@ body {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	background-color: rgba(255, 255, 255, 0.7);
+	background-color: var(--buttonBG);
 	border-radius: 7px;
 	position: fixed;
 	transform: translateX(-50%);
@@ -28,10 +88,11 @@ body {
 }
 #nav button:visited,
 #nav button {
+	font-size: 15px;
+	background-color: var(--buttonBG);
 	text-decoration: none;
-	color: var(--textBlack);
-	font-family: 'Courier New', Courier, monospace;
-	font-weight: 700;
+	color: var(--buttonTextC);
+	font-weight: 500;
 	letter-spacing: 1px;
 	border-radius: 7px;
 	display: flex;
@@ -42,7 +103,7 @@ body {
 	height: 100%;
 	cursor: pointer;
 	word-spacing: -3px;
-	transition-property: background-color;
+	transition-property: background-color, color;
 	transition-duration: 250ms;
 	border: none;
 }
@@ -51,7 +112,8 @@ body {
 }
 #nav button:hover,
 #nav button.active {
-	background-color: rgb(190, 200, 200);
+	background-color: var(--accent);
+	color: var(--textOnAccent);
 }
 
 .page {
@@ -62,21 +124,20 @@ body {
 	transition-duration: 500ms;
 	top: 0;
 	border: 1px solid black;
+	overflow-y: auto;
+	background-color: var(--background);
 }
 #plan_page {
-	background-color: var(--background);
 	left: 0vw;
 }
 #expenses_page {
-	background-color: var(--background);
 	left: 100vw;
 }
 #sinking_funds_page {
-	background-color: var(--background);
 	left: 200vw;
 }
 .bold {
-	font-weight: 600;
+	font-weight: 500;
 }
 #message_banner {
 	width: auto;
@@ -88,10 +149,103 @@ body {
 	background-color: var(--accent);
 	text-align: center;
 	padding: 5px 10px;
-	color: var(--textWhite);
+	color: var(--textOnAccent);
 	border-radius: 10px;
-	border: 1px solid white;
+	border: 1px solid var(--accentBorder);
 	opacity: 0;
 	transition: opacity 500ms;
 	z-index: 100;
+}
+
+[data-hover] {
+	position: relative;
+	anchor-name: --hoverAnchor;
+}
+
+[data-hover]:not([data-hover]:disabled):hover::after {
+	content: attr(data-hover);
+	position: absolute;
+	left: 100%;
+	top: 100%;
+	position-anchor: --hoverAnchor;
+	position-area: bottom right;
+	background-color: var(--optionBG);
+	border: 1px solid var(--mainBorder);
+	border-radius: 5px;
+	padding: 2px 5px;
+	text-wrap: nowrap;
+	z-index: 100;
+	font-weight: 500;
+	font-size: 14px;
+	color: var(--textOnOption);
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input {
+	color: var(--inputColor);
+}
+
+.form {
+	width: 250px;
+	position: absolute;
+	border: 1px solid var(--mainBorder);
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	background-color: var(--optionBG);
+	border-radius: 10px;
+	display: none;
+	z-index: 100;
+	padding: 10px;
+}
+.form label {
+	font-size: 15px;
+	color: var(--textOnOption);
+}
+
+.form input,
+.form select,
+.form #new_expense_date {
+	height: 19px;
+	width: 60%;
+	box-sizing: border-box;
+	outline: none;
+	border: 1px solid var(--inputBorder);
+	border-radius: var(--commonBorderRadius);
+	color: var(--inputColor);
+}
+.form > div {
+	/* border: 1px solid blue; */
+	width: stretch;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.form .form-name {
+	display: inline-block;
+	text-align: center;
+	color: var(--textOnOption);
+}
+.form button {
+	width: 30%;
+	background-color: var(--buttonBG);
+	box-shadow: 1px 1px 1px 0;
+	color: var(--buttonTextC);
+	border: 1px solid var(--mainBorder);
+	border-radius: var(--commonBorderRadius);
+}
+.form button:hover {
+	background-color: var(--buttonHoverBG);
+}
+input:disabled {
+	background-color: var(--disabledInputBG);
+	color: var(--disabledInputC);
+	border: 1px solid var(--mainBorder);
+}
+button:disabled {
+	opacity: var(--disabledButtonOpacity);
 }

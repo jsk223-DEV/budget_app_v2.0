@@ -18,7 +18,10 @@ window.addEventListener('load', () => {
 window.addEventListener('beforeunload', () => {
 	saveBudget();
 });
-function saveBudget() {
+function saveBudget(manual) {
+	if (!BUDGET.autoSave && !manual) {
+		return;
+	}
 	let saves = JSON.parse(localStorage.getItem('BUDGET_SAVES'));
 	if (!saves) {
 		return;
@@ -90,7 +93,7 @@ function addPlanSection() {
 		BUDGET.planSections.push(endSections[i]);
 	}
 	document.querySelector('.focus').classList.remove('focus');
-	BUDGET.render();
+	BUDGET.renderPlanSections();
 }
 
 function deletePlanSection() {
@@ -106,7 +109,7 @@ function deletePlanSection() {
 	}
 	document.querySelector('.focus').classList.remove('focus');
 	BUDGET.updateTotals();
-	BUDGET.render();
+	BUDGET.renderPlanSections();
 }
 
 function addPlanItem() {
@@ -117,7 +120,7 @@ function addPlanItem() {
 		BUDGET.planSections[fSBudgetLocation].planItems[i].index = i;
 	}
 	document.querySelector('.focus').classList.remove('focus');
-	BUDGET.render();
+	BUDGET.renderPlanSections();
 }
 
 function deletePlanItem(item) {
@@ -127,18 +130,16 @@ function deletePlanItem(item) {
 		BUDGET.planSections[itemLocation[0]].planItems[i].index = i;
 	}
 	BUDGET.updateTotals();
-	BUDGET.render();
+	BUDGET.renderPlanSections();
 }
 
 function sectionNameChanged(row, value) {
 	let location = Number(row.dataset.budgetLocation);
 	BUDGET.planSections[location].name = value;
-	BUDGET.render();
 }
 function itemNameChanged(row, value) {
 	let location = row.dataset.budgetLocation.split('_');
 	BUDGET.planSections[location[0]].planItems[location[1]].name = value;
-	BUDGET.render();
 }
 
 function getDaysInMonth(year, month) {
@@ -147,13 +148,14 @@ function getDaysInMonth(year, month) {
 
 function autoSetPayDaysToPrefered() {
 	let payDayEles = document.querySelectorAll('#plan_page .pay-day');
-	let month = BUDGET.date.month + 1;
+	let month = Number(BUDGET.date.month) + 1;
 	let year = BUDGET.date.year;
 	let payDayOne;
 	BUDGET.payDays.length = 0;
 	let daysInMonth = getDaysInMonth(year, month);
 	for (let i = 1; i < 8; i++) {
-		if (new Date(month + ' ' + i + ' ' + year).getDay() == BUDGET.payDayPreference) {
+		let dayOfWeek = new Date(month + ',' + i + ',' + year).getDay();
+		if (dayOfWeek == BUDGET.payDayPreference) {
 			payDayOne = i;
 			for (let j = 0; j < 5; j++) {
 				let day = payDayOne + j * 7;
@@ -166,12 +168,6 @@ function autoSetPayDaysToPrefered() {
 			}
 		}
 	}
-	// for (let i = 0; i < BUDGET.expenseTables.length; i++) {
-	// 	if (i < BUDGET.payDays.length) {
-	// 		BUDGET.expenseTables[i].firstDay = BUDGET.payDays[i];
-	// 		BUDGET.expenseTables[i].setName();
-	// 	}
-	// }
 }
 
 function setPayDayPreference(select) {
@@ -182,12 +178,15 @@ function setPayDayPreference(select) {
 }
 
 function nextMonth() {
-	saveBudget();
+	BUDGET.setToReadOnly();
 	let saves = JSON.parse(localStorage.getItem('BUDGET_SAVES'));
+	if (BUDGET.index < saves.length - 1) {
+		load(saves[BUDGET.index + 1]);
+		return;
+	}
+	saveBudget();
 	BUDGET = saves[saves.length - 1];
 	let newBudget = new Budget(BUDGET, BUDGET.index + 1);
-	// newBudget.planSections = BUDGET.planSections;
-	// newBudget.payDayPreference = BUDGET.payDayPreference;
 	let month = BUDGET.date.month;
 	let year = BUDGET.date.year;
 	month = Number(month) + 1;
@@ -209,6 +208,7 @@ function nextMonth() {
 }
 
 function thisMonth() {
+	BUDGET.setToReadOnly();
 	saveBudget();
 	let saves = JSON.parse(localStorage.getItem('BUDGET_SAVES'));
 	let thisDate = new Date();
@@ -225,23 +225,23 @@ function thisMonth() {
 	newBudget.date = { month: thisDate.getMonth().toString().padStart(2, '0'), year: thisDate.getFullYear() };
 	BUDGET = newBudget;
 	BUDGET.clearBudgetValues();
-	BUDGET.render();
 	BUDGET.updateTotals();
 	BUDGET.updateName();
 	autoSetPayDaysToPrefered();
 	BUDGET.expenseTables = [];
 	BUDGET.setUpExpenseTables(false);
+	BUDGET.render();
 	saveBudget();
 }
 
 function load(object) {
 	saveBudget();
 	BUDGET = new Budget(object);
-	BUDGET.render();
 	BUDGET.updateTotals();
 	BUDGET.updateName();
 	autoSetPayDaysToPrefered();
 	document.querySelector('#plan_page #pay_day_drop').value = BUDGET.payDayPreference;
+	BUDGET.render();
 }
 function updateIncome(index, value) {
 	BUDGET.weeklyIncomes[index] = Number(value);
@@ -289,7 +289,7 @@ function moveSectionTo(focused, destination) {
 }
 
 function showSectionMarkers(focusedLoc) {
-	let sectionBars = document.querySelectorAll('#plan_page .section-bar');
+	let sectionBars = document.querySelectorAll('#plan_page .section-bar:not(.plan-fund-section)');
 	let planPage = document.querySelector('#plan_page');
 	let planTable = document.querySelector('#plan_table');
 	for (let i = 0; i < sectionBars.length; i++) {
@@ -308,7 +308,7 @@ function showSectionMarkers(focusedLoc) {
 	}
 	let marker = document.createElement('div');
 	marker.classList.add('move-marker');
-	marker.style.top = planTable.offsetTop + document.querySelector('#plan_page #total_bar').offsetTop - 2 + 'px';
+	marker.style.top = planTable.offsetTop + document.querySelector('#plan_page .spacer').offsetTop + 'px';
 	marker.onclick = () =>
 		moveSectionTo(Number(focusedLoc), Number(sectionBars[sectionBars.length - 1].dataset.budgetLocation) + 1);
 	marker.innerHTML = '<div></div><div></div><div></div>';
@@ -381,7 +381,10 @@ window.addEventListener('click', (evt) => {
 	if (!evt.target.classList.contains('move') && !evt.target.classList.contains('move-section-button')) {
 		removeMoveMarkers();
 	}
-	if (!evt.target.classList.contains('option-button')) {
+	if (
+		!evt.target.classList.contains('option-button') &&
+		!evt.target.parentElement.classList.contains('option-button')
+	) {
 		closeOptions(document.querySelector('#item_options'));
 	}
 	if (evt.target.id != 'new_expense_date') {
@@ -476,7 +479,7 @@ function setExpenseDate(button) {
 	hideNedDrop();
 	document.querySelector('#expenses_page #new_expense_date').innerText = button.innerText;
 }
-function showExpenseForm() {
+function showExpenseForm(sinking) {
 	let expenseForm = document.querySelector('#new_expense_form');
 	expenseForm.style.display = 'flex';
 	let select = document.querySelector('#new_expense_type');
@@ -484,11 +487,29 @@ function showExpenseForm() {
 	for (let i = 0; i < oldOptions.length; i++) {
 		oldOptions[i].remove();
 	}
-	for (let i = 0; i < BUDGET.planSections.length; i++) {
-		let section = BUDGET.planSections[i];
-		for (let j = 0; j < section.planItems.length; j++) {
+	expenseForm.dataset.sinking = sinking;
+	if (sinking) {
+		expenseForm.querySelector('.form-name').innerHTML = 'New Expense<br>From Sinking Fund';
+		expenseForm.querySelector('#net_label').innerText = 'Fund:';
+		for (let i = 0; i < BUDGET.sinkingFunds.length; i++) {
 			let option = document.createElement('option');
-			option.innerText = section.planItems[j].name;
+			option.innerText = BUDGET.sinkingFunds[i].name;
+			select.appendChild(option);
+		}
+	} else {
+		expenseForm.querySelector('.form-name').innerText = 'New Expense';
+		expenseForm.querySelector('#net_label').innerText = 'Type:';
+		for (let i = 0; i < BUDGET.planSections.length; i++) {
+			let section = BUDGET.planSections[i];
+			for (let j = 0; j < section.planItems.length; j++) {
+				let option = document.createElement('option');
+				option.innerText = section.planItems[j].name;
+				select.appendChild(option);
+			}
+		}
+		for (let i = 0; i < BUDGET.planFundSection.planItems.length; i++) {
+			let option = document.createElement('option');
+			option.innerText = BUDGET.planFundSection.planItems[i].name;
 			select.appendChild(option);
 		}
 	}
@@ -511,30 +532,63 @@ function submitNewExpense(expenseForm, pAmount, pDate, pLoc, pType, pTable) {
 	let expenseType = pType || expenseForm.querySelector('#new_expense_type').value;
 	let currentTableEle = document.querySelector('#expenses_page .current-table');
 	let expenseTable = pTable || BUDGET.expenseTables[currentTableEle.dataset.index];
+	let oos = expenseForm.dataset.sinking.toString() == 'true' ? true : false;
+	let fdate;
+	let type = expenseType;
 
-	if (expenseAmount == '' || expenseDate == '' || expenseLocation == '' || expenseType == '') {
+	if (expenseAmount == '' || expenseType == '') {
 		return;
+	}
+	if (expenseDate == '') {
+		expenseDate = '--';
+		fdate = '--';
+	} else {
+		fdate = expenseDate.split(' ');
+		fdate = `${Number(MONTH_ABBR_TO_I.get(fdate[0])) + 1}-${fdate[1]}-${BUDGET.date.year}`;
+	}
+	if (expenseLocation == '') {
+		expenseLocation = '--';
+	}
+
+	if (oos) {
+		type = 'Expense From: ' + type;
+		for (let i = 0; i < BUDGET.sinkingFunds.length; i++) {
+			if (BUDGET.sinkingFunds[i].name == expenseType) {
+				BUDGET.sinkingFunds[i].addExpense(fdate, expenseAmount, expenseLocation);
+				i = Infinity;
+				BUDGET.renderSinkingFunds();
+			}
+		}
+	} else {
+		for (let i = 0; i < BUDGET.planFundSection.planItems.length; i++) {
+			if (expenseType == BUDGET.planFundSection.planItems[i].name) {
+				BUDGET.sinkingFunds[i].addIncome(fdate, expenseAmount, expenseLocation);
+				i = Infinity;
+				BUDGET.renderSinkingFunds();
+			}
+		}
 	}
 
 	let index = -1;
 	for (let i = 0; i < expenseTable.expenseSections.length; i++) {
-		if (expenseType == expenseTable.expenseSections[i].name) {
+		if (type == expenseTable.expenseSections[i].name) {
 			index = i;
 			break;
 		}
 	}
 
 	if (index == -1) {
-		expenseTable.expenseSections.push(new ExpenseSection(false, expenseType));
+		expenseTable.expenseSections.push(new ExpenseSection(false, type));
 		index = expenseTable.expenseSections.length - 1;
 	}
 
 	expenseTable.expenseSections[index].expenseItems.push(
 		new ExpenseItem({
+			fullDate: fdate,
 			date: expenseDate,
 			amount: expenseAmount,
 			location: expenseLocation,
-			type: expenseType,
+			type: type,
 			index: 0,
 			sectionIndex: index,
 		})
@@ -561,4 +615,107 @@ function deleteExpense(row) {
 		}
 	}
 	expenseTable.renderSections(currentTableEle);
+}
+
+function revealFundForm() {
+	let form = document.querySelector('#new_fund_form');
+	form.style.display = 'flex';
+}
+function hideFundForm() {
+	let form = document.querySelector('#new_fund_form');
+	form.style.display = 'none';
+}
+
+function submitNewFund(form) {
+	let name = form.querySelector('#new_fund_name').value;
+	let startingBalance = form.querySelector('#new_fund_amount').value || 0;
+	let fund = new SinkingFund({ name: name }, BUDGET.sinkingFunds.length);
+	if (startingBalance && startingBalance > 0) {
+		let d = new Date();
+		let date = `${(d.getMonth() + 1).toString().padStart(2, '0')}-${d
+			.getDate()
+			.toString()
+			.padStart(2, '0')}-${d.getFullYear()}`;
+		fund.addIncome(date, startingBalance, 'Starting Balance');
+	}
+	BUDGET.planFundSection.planItems.push(new PlanItem({ name: name }, BUDGET.planFundSection.planItems.length, true));
+	BUDGET.renderFundSection();
+	BUDGET.sinkingFunds.push(fund);
+	fund.render();
+}
+
+function showManualForm(type, index) {
+	let fundEle = document.querySelectorAll('#sinking_main .sinking-fund')[index];
+	let form = fundEle.querySelector('.sinking-manual-form');
+	let d = new Date();
+	let date = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d
+		.getDate()
+		.toString()
+		.padStart(2, '0')}`;
+	form.querySelector('.sinking-manual-date').value = date;
+	form.style.display = 'flex';
+	form.dataset.index = index;
+	form.dataset.type = type;
+	if (type == 'income') {
+		form.querySelector('.form-name').innerText = 'Add Money';
+	} else if (type == 'expense') {
+		form.querySelector('.form-name').innerText = 'Remove Money';
+	}
+}
+
+function submitManualAmount(form) {
+	let amount = Number(form.querySelector('.sinking-manual-amount').value);
+	let date = form.querySelector('.sinking-manual-date').value.split('-');
+	let loc = form.querySelector('.sinking-manual-location').value;
+	if (loc.length < 1) {
+		loc == '--';
+	}
+	if (date.length < 3) {
+		date == '--';
+	} else {
+		date = `${date[1]}-${date[2]}-${date[0]}`;
+	}
+	let index = Number(form.dataset.index);
+	let type = form.dataset.type;
+	if (type == 'income') {
+		BUDGET.sinkingFunds[index].addIncome(date, amount, loc);
+	} else if (type == 'expense') {
+		BUDGET.sinkingFunds[index].addExpense(date, amount, loc);
+	}
+	BUDGET.renderSinkingFunds();
+}
+
+function hideManualForm(form) {
+	form.style.display = 'none';
+}
+
+function fundNameChanged(input, index) {
+	BUDGET.sinkingFunds[index].name = input.value;
+	BUDGET.planFundSection.planItems[index].name = input.value;
+	BUDGET.renderFundSection();
+}
+
+function deleteSinkingFund(i) {
+	BUDGET.sinkingFunds.splice(i, 1);
+	BUDGET.planFundSection.planItems.splice(i, 1);
+	for (let i = 0; i < BUDGET.sinkingFunds.length; i++) {
+		BUDGET.sinkingFunds[i].index = i;
+		BUDGET.planFundSection.planItems[i].index = i;
+	}
+	BUDGET.updateTotals();
+	BUDGET.renderSinkingFunds();
+	BUDGET.renderFundSection();
+}
+
+function toggleTheme(themeButton) {
+	let b = document.body;
+	let currentTheme = b.classList[0];
+	b.classList.remove(currentTheme);
+	if (currentTheme == 'dark-theme') {
+		b.classList.add('light-theme');
+		themeButton.innerText = 'Dark';
+	} else if (currentTheme == 'light-theme') {
+		b.classList.add('dark-theme');
+		themeButton.innerText = 'Light';
+	}
 }
