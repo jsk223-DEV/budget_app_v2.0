@@ -154,6 +154,7 @@ body {
 	border: 1px solid black;
 	overflow-y: auto;
 	background-color: var(--background);
+	scrollbar-width: none;
 }
 #plan_page {
 	left: 0vw;
