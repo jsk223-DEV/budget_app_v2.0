@@ -62,6 +62,34 @@ body.light-theme {
 	--disabledInputBG: hsl(0 0 70%);
 	--disabledInputC: white;
 }
+#small_screen_overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+	width: 300vw;
+	height: 100vh;
+	z-index: 1000;
+	background-color: var(--background);
+	color: var(--textOnBG);
+	justify-content: center;
+	align-items: left;
+	flex-direction: column;
+
+	& span {
+		margin-left: 10vw;
+		width: 80vw;
+	}
+
+	& span:first-child {
+		font-size: 25px;
+	}
+}
+@media screen and (max-width: 800px) {
+	#small_screen_overlay {
+		display: flex;
+	}
+}
 * {
 	font-family: 'Courier Prime', monospace;
 	color: var(--textOnBG);

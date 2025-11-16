@@ -1,4 +1,7 @@
 let BUDGET;
+if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+	document.getElementById('small_screen_overlay').style.display = 'flex';
+}
 window.addEventListener('load', () => {
 	let saves = JSON.parse(localStorage.getItem('BUDGET_SAVES'));
 	if (!saves || saves.length == 0) {
