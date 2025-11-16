@@ -159,6 +159,7 @@ class Budget {
 		let weeklyIncomeEles = document.querySelectorAll('#plan_page .weekly-income');
 		for (let i = 0; i < this.weeklyIncomes.length; i++) {
 			if (this.weeklyIncomes[i]) {
+				this.weeklyIncomes[i] = round(this.weeklyIncomes[i]);
 				weeklyIncomeEles[i].value = this.weeklyIncomes[i];
 			} else if (this.weeklyIncomes[i] == 0) {
 				weeklyIncomeEles[i].value = '';
@@ -186,11 +187,16 @@ class Budget {
 			this.totalActualSpent += item.actualSpent;
 			for (let w = 0; w < this.weeklyExpenseTotals.length; w++) {
 				this.weeklyExpenseTotals[w] += item.weeklyTotals[w];
+				this.weeklyExpenseTotals[w] = round(this.weeklyExpenseTotals[w]);
 			}
 		}
 		for (let i = 0; i < this.weeklyIncomes.length; i++) {
 			this.totalIncome += this.weeklyIncomes[i];
 		}
+		this.totalIncome = round(this.totalIncome);
+		this.totalBudgeted = round(this.totalBudgeted);
+		this.totalLeftTo = round(this.totalLeftTo);
+		this.totalActualSpent = round(this.totalActualSpent);
 		this.totalBar.totalBudgeted.innerText = this.totalBudgeted;
 		for (let i = 0; i < this.weeklyExpenseTotals.length; i++) {
 			this.totalBar.weeklyExpenseTotals[i].innerText = this.weeklyExpenseTotals[i];
@@ -198,7 +204,7 @@ class Budget {
 		this.totalBar.totalLeftTo.innerText = this.totalLeftTo;
 		this.totalBar.totalActualSpent.innerText = this.totalActualSpent;
 		this.totalBar.totalIncome.innerText = this.totalIncome;
-		this.totalBar.shouldBeZero.innerText = this.totalIncome - this.totalBudgeted;
+		this.totalBar.shouldBeZero.innerText = round(this.totalIncome - this.totalBudgeted);
 	}
 
 	setUpExpenseTables(copyData) {

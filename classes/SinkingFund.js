@@ -8,6 +8,7 @@ class SinkingFund {
 
 	addIncome(date, amount, location) {
 		this.balance += Number(amount);
+		this.balance = round(this.balance);
 		let loc = location || '--';
 		let d = date || '--';
 		this.history.unshift(new SinkingHistoryItem({ type: 'income', amount: '$' + amount, location: loc, date: d }));
@@ -15,6 +16,7 @@ class SinkingFund {
 
 	addExpense(date, amount, location) {
 		this.balance -= Number(amount);
+		this.balance = round(this.balance);
 		let loc = location || '--';
 		let d = date || '--';
 		this.history.unshift(new SinkingHistoryItem({ type: 'expense', amount: '$' + amount, location: loc, date: d }));

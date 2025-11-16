@@ -47,3 +47,7 @@ const ALPHA_NUM = new Map([
 	['4', 'four'],
 	['5', 'five'],
 ]);
+
+function round(num) {
+	return Math.round(Number(num) * 100) / 100;
+}

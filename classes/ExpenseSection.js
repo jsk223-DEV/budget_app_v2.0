@@ -16,6 +16,7 @@ class ExpenseSection {
 		for (let i = 0; i < this.expenseItems.length; i++) {
 			this.typeTotal += Number(this.expenseItems[i].amount);
 		}
+		this.typeTotal = round(this.typeTotal);
 	}
 
 	render(categoryRow) {

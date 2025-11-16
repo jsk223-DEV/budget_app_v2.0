@@ -73,8 +73,8 @@ class PlanItem {
 		for (let i = 0; i < this.weeklyTotals.length; i++) {
 			totalSpent += this.weeklyTotals[i];
 		}
-		this.actualSpent = totalSpent;
-		this.leftTo = this.budgetAmount - totalSpent;
+		this.actualSpent = round(totalSpent);
+		this.leftTo = round(this.budgetAmount - totalSpent);
 		if (row) {
 			row.querySelector('.left-to').innerText = this.leftTo;
 			row.querySelector('.actual-spent').innerText = this.actualSpent;

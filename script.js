@@ -539,6 +539,7 @@ function submitNewExpense(expenseForm, pAmount, pDate, pLoc, pType, pTable) {
 	if (expenseAmount == '' || expenseType == '') {
 		return;
 	}
+	expenseAmount = round(expenseAmount);
 	if (expenseDate == '') {
 		expenseDate = '--';
 		fdate = '--';
@@ -631,6 +632,7 @@ function submitNewFund(form) {
 	let startingBalance = form.querySelector('#new_fund_amount').value || 0;
 	let fund = new SinkingFund({ name: name }, BUDGET.sinkingFunds.length);
 	if (startingBalance && startingBalance > 0) {
+		startingBalance = round(startingBalance);
 		let d = new Date();
 		let date = `${(d.getMonth() + 1).toString().padStart(2, '0')}-${d
 			.getDate()
@@ -665,6 +667,7 @@ function showManualForm(type, index) {
 
 function submitManualAmount(form) {
 	let amount = Number(form.querySelector('.sinking-manual-amount').value);
+	amount = round(amount);
 	let date = form.querySelector('.sinking-manual-date').value.split('-');
 	let loc = form.querySelector('.sinking-manual-location').value;
 	if (loc.length < 1) {

@@ -46,6 +46,7 @@
 	position: absolute;
 	left: 3px;
 	top: 1px;
+
 	width: 18px;
 	height: 18px;
 	box-sizing: border-box;
@@ -119,10 +120,12 @@
 	padding: 5px;
 }
 #ned_drop > div {
+	color: var(--buttonTextC);
 	width: 28%;
 	height: 28%;
 	border: 1px solid var(--mainBorder);
 	border-radius: var(--commonBorderRadius);
+	box-shadow: 1px 1px 1px 0;
 	margin: auto;
 	text-align: center;
 	align-content: center;
