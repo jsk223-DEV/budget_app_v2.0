@@ -211,7 +211,6 @@ function nextMonth() {
 }
 
 function thisMonth() {
-	BUDGET.setToReadOnly();
 	saveBudget();
 	let saves = JSON.parse(localStorage.getItem('BUDGET_SAVES'));
 	let thisDate = new Date();
@@ -223,6 +222,7 @@ function thisMonth() {
 			return;
 		}
 	}
+	BUDGET.setToReadOnly();
 	BUDGET = saves[saves.length - 1];
 	let newBudget = new Budget(BUDGET, BUDGET.index + 1);
 	newBudget.date = { month: thisDate.getMonth().toString().padStart(2, '0'), year: thisDate.getFullYear() };
@@ -633,7 +633,11 @@ function hideFundForm() {
 function submitNewFund(form) {
 	let name = form.querySelector('#new_fund_name').value;
 	let startingBalance = form.querySelector('#new_fund_amount').value || 0;
+	let targetBalance = form.querySelector('#new_fund_target_balance').value || 0;
 	let fund = new SinkingFund({ name: name }, BUDGET.sinkingFunds.length);
+	if (targetBalance && targetBalance > 0) {
+		fund.targetBalance = targetBalance;
+	}
 	if (startingBalance && startingBalance > 0) {
 		startingBalance = round(startingBalance);
 		let d = new Date();
@@ -668,6 +672,20 @@ function showManualForm(type, index) {
 	}
 }
 
+function showTBForm(index) {
+	let fundEle = document.querySelectorAll('#sinking_main .sinking-fund')[index];
+	let form = fundEle.querySelector('.change-tb-form');
+	form.dataset.index = index;
+	form.style.display = 'flex';
+}
+
+function submitTBAmount(formEle) {
+	let i = formEle.dataset.index;
+	let amount = formEle.querySelector('.sinking-tb-amount').value;
+	BUDGET.sinkingFunds[i].targetBalance = amount;
+	BUDGET.renderSinkingFunds();
+}
+
 function submitManualAmount(form) {
 	let amount = Number(form.querySelector('.sinking-manual-amount').value);
 	amount = round(amount);
@@ -691,6 +709,9 @@ function submitManualAmount(form) {
 	BUDGET.renderSinkingFunds();
 }
 
+function hideTBForm(form) {
+	form.style.display = 'none';
+}
 function hideManualForm(form) {
 	form.style.display = 'none';
 }

@@ -69,12 +69,16 @@
 .sinking-fund .control button img {
 	width: 15px;
 	aspect-ratio: 1/1;
-	margin-left: -4px;
+	position: relative;
+	right: 5px;
+	bottom: 1px;
 }
 .sinking-fund .balance {
-	font-size: 38px;
 	font-weight: 600;
+	text-align: center;
 	color: var(--textOnOption);
+	overflow-x: auto;
+	width: 100%;
 }
 .sinking-fund .history {
 	width: stretch;
@@ -91,6 +95,7 @@
 	gap: 2px;
 	margin-bottom: 2px;
 }
+
 /* .sinking-fund .history li::before {
 	content: '';
 	position: relative;
@@ -113,6 +118,11 @@
 }
 .sinking-fund .history li.expense span {
 	color: red;
+}
+.sinking-fund .history li:nth-child(1) {
+	position: sticky;
+	top: 0;
+	background-color: var(--forground);
 }
 .sinking-fund .history li:nth-child(1) span {
 	border-bottom: 1px solid var(--mainBorder);

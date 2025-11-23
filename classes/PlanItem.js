@@ -13,10 +13,17 @@ class PlanItem {
 		item.classList.add('plan-item');
 		item.dataset.budgetLocation = sectIndex + '_' + this.index;
 		if (this.sinking) {
+			let sf = BUDGET.sinkingFunds[this.index];
+			let tb = '';
+			if (sf.targetBalance && sf.targetBalance > 0) {
+				tb = `/$${sf.targetBalance}`;
+			}
 			item.classList.add('plan-fund-item');
 			item.innerHTML = /* html */ `
 				<td></td>
-				<td><input type="text" class="input-name" placeholder="Item Name" value="${this.name}" disabled></td>
+				<td><input type="text" class="input-name" placeholder="Item Name" value="${this.name}" disabled><span>$${sf.balance
+				.toString()
+				.concat(tb)}</span></td>
 				<td><input ${
 					BUDGET.readOnly ? 'disabled' : ''
 				} type="number" class="budget-amount" onchange="updateBudgetAmount(this.parentElement.parentElement, this.value, true)"></td>

@@ -140,6 +140,7 @@ class Budget {
 			this.sinkingFunds[i].index = i;
 			this.sinkingFunds[i].render();
 		}
+		this.renderFundSection();
 	}
 
 	clearBudgetValues() {

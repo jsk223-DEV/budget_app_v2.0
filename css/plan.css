@@ -182,7 +182,8 @@ td:has(.item-button) {
 	text-align: center;
 	color: var(--textOnBG);
 	font-size: 15px;
-	width: calc(100% - 7px);
+	width: auto;
+	/* width: calc(100% - 7px); */
 }
 #plan_table .plan-item .input-name::placeholder {
 	color: var(--textOnBG);
