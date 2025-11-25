@@ -29,6 +29,18 @@ class Budget {
 			shouldBeZero: document.querySelector('#plan_table #should_be_zero'),
 		};
 		this.index = index == undefined ? object.index : index;
+		this.theme = object.theme || 'dark-theme';
+		this.accent = object.accent || '#FF0000';
+		if (this.theme == 'light-theme') {
+			document.querySelector('#toggle_theme').innerText = 'Dark';
+		} else {
+			document.querySelector('#toggle_theme').innerText = 'Light';
+		}
+		document.body.classList.remove('light-theme');
+		document.body.classList.remove('dark-theme');
+		document.body.classList.add(this.theme);
+		document.body.style.setProperty('--accent', this.accent);
+		document.querySelector('#accent_picker').value = this.accent;
 		if (object.planSections) {
 			for (let i = 0; i < object.planSections.length; i++) {
 				this.planSections.push(new PlanSection(object.planSections[i]));

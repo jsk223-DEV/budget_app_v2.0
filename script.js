@@ -741,8 +741,15 @@ function toggleTheme(themeButton) {
 	if (currentTheme == 'dark-theme') {
 		b.classList.add('light-theme');
 		themeButton.innerText = 'Dark';
+		BUDGET.theme = 'light-theme';
 	} else if (currentTheme == 'light-theme') {
 		b.classList.add('dark-theme');
 		themeButton.innerText = 'Light';
+		BUDGET.theme = 'dark-theme';
 	}
+}
+
+function changeAccentColor(color) {
+	document.body.style.setProperty('--accent', color);
+	BUDGET.accent = color;
 }

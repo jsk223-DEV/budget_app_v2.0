@@ -11,22 +11,49 @@
 
 #plan_controls > td > * {
 	display: inline;
-	margin: 0 10px;
+	margin: -5px 10px 0 10px;
 }
+/* #plan_controls > td {
+	display: inline;
+	margin: 0 10px;
+} */
 
 #plan_controls {
-	/* border: 1px solid var(--mainBorder); */
 	background-color: var(--darkLineColor);
+	align-content: center;
+	height: 20px;
 }
 
 #pay_day_drop,
 #plan_controls > td > button {
+	align-content: center;
+	height: 18px;
 	outline: none;
 	background-color: var(--buttonBG);
 	border: 1px solid black;
 	border-radius: var(--commonBorderRadius);
 	color: var(--buttonTextC);
 }
+input[type='color' i] {
+	/* inline-size: 18px; */
+	/* block-size: 18px; */
+	height: 18px;
+	width: 18px;
+	border: 1px solid black;
+	border-radius: var(--commonBorderRadius);
+	top: 6px;
+}
+input[type='color' i]::-webkit-color-swatch-wrapper {
+	padding: 0px;
+	width: 20px;
+	height: 20px;
+
+	margin-top: -2px;
+	margin-left: -3px;
+}
+/* #accent_picker::webkit-color-swatch-wrapper {
+	padding: 1px;
+} */
 #pay_day_drop:hover,
 #plan_controls > td > button:hover {
 	background-color: var(--buttonHoverBG);

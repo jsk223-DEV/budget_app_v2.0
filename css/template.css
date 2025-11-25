@@ -37,7 +37,7 @@ body.light-theme {
 
 	--background: hsl(0, 0%, 90%);
 	--midground: hsl(0 0 80%);
-	--forground: hsl(0 0 80%);
+	--forground: hsl(0 0 95%);
 	--textOnBG: black;
 
 	--darkLineColor: var(--midground);

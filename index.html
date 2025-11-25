@@ -34,7 +34,14 @@
 			<table id="plan_table">
 				<tr id="plan_controls">
 					<td colspan="11">
-						<button data-hover="Change Theme" onclick="toggleTheme(this)">Light</button>
+						<input
+							data-hover="Change Accent Color"
+							onchange="changeAccentColor(this.value)"
+							type="color"
+							value="#FF0000"
+							id="accent_picker"
+						/>
+						<button data-hover="Change Theme" onclick="toggleTheme(this)" id="toggle_theme">Light</button>
 						<button data-hover="Save budget" onclick="saveBudget(true)">Save</button>
 						<button data-hover="Load past budgets" onclick="revealLoadOptions()" id="load_button">
 							Load
@@ -142,7 +149,8 @@
 			<div id="new_expense_form" class="form">
 				<div class="form-name">New Expense</div>
 				<div>
-					<label for="new_expense_amount">Amount $: </label> <input id="new_expense_amount" type="number" />
+					<label for="new_expense_amount">Amount $: </label>
+					<input id="new_expense_amount" type="number" />
 				</div>
 
 				<div>
