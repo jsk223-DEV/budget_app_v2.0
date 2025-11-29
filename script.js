@@ -516,7 +516,7 @@ function showExpenseForm(sinking) {
 				let option = document.createElement('div');
 				option.classList.add('cs-option');
 				option.setAttribute('onclick', 'selectValChanged(this)');
-				option.innerText = section.planItems[i].name;
+				option.innerText = section.planItems[j].name;
 				select.appendChild(option);
 			}
 		}
