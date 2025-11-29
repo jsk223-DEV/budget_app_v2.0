@@ -485,17 +485,21 @@ function setExpenseDate(button) {
 function showExpenseForm(sinking) {
 	let expenseForm = document.querySelector('#new_expense_form');
 	expenseForm.style.display = 'flex';
-	let select = document.querySelector('#new_expense_type');
-	let oldOptions = select.querySelectorAll('option');
+	let selectWrapper = document.querySelector('#new_expense_type');
+	let select = selectWrapper.querySelector('.cs-option-wrapper');
+	let oldOptions = select.querySelectorAll('div');
 	for (let i = 0; i < oldOptions.length; i++) {
 		oldOptions[i].remove();
 	}
+	selectWrapper.querySelector('.custom-select .cs-val').innerText = '';
 	expenseForm.dataset.sinking = sinking;
 	if (sinking) {
 		expenseForm.querySelector('.form-name').innerHTML = 'New Expense<br>From Sinking Fund';
 		expenseForm.querySelector('#net_label').innerText = 'Fund:';
 		for (let i = 0; i < BUDGET.sinkingFunds.length; i++) {
-			let option = document.createElement('option');
+			let option = document.createElement('div');
+			option.classList.add('cs-option');
+			option.setAttribute('onclick', 'selectValChanged(this)');
 			option.innerText = BUDGET.sinkingFunds[i].name;
 			select.appendChild(option);
 		}
@@ -504,15 +508,27 @@ function showExpenseForm(sinking) {
 		expenseForm.querySelector('#net_label').innerText = 'Type:';
 		for (let i = 0; i < BUDGET.planSections.length; i++) {
 			let section = BUDGET.planSections[i];
+			let optSection = document.createElement('div');
+			optSection.innerText = section.name;
+			optSection.classList.add('cs-option-section');
+			select.appendChild(optSection);
 			for (let j = 0; j < section.planItems.length; j++) {
-				let option = document.createElement('option');
-				option.innerText = section.planItems[j].name;
+				let option = document.createElement('div');
+				option.classList.add('cs-option');
+				option.setAttribute('onclick', 'selectValChanged(this)');
+				option.innerText = section.planItems[i].name;
 				select.appendChild(option);
 			}
 		}
+		let optSection = document.createElement('div');
+		optSection.innerText = 'Sinking Funds';
+		optSection.classList.add('cs-option-section');
+		select.appendChild(optSection);
 		for (let i = 0; i < BUDGET.planFundSection.planItems.length; i++) {
-			let option = document.createElement('option');
+			let option = document.createElement('div');
 			option.innerText = BUDGET.planFundSection.planItems[i].name;
+			option.classList.add('cs-option');
+			option.setAttribute('onclick', 'selectValChanged(this)');
 			select.appendChild(option);
 		}
 	}
@@ -532,7 +548,7 @@ function submitNewExpense(expenseForm, pAmount, pDate, pLoc, pType, pTable) {
 	let expenseAmount = pAmount || expenseForm.querySelector('#new_expense_amount').value;
 	let expenseDate = pDate || expenseForm.querySelector('#new_expense_date').innerText;
 	let expenseLocation = pLoc || expenseForm.querySelector('#new_expense_location').value;
-	let expenseType = pType || expenseForm.querySelector('#new_expense_type').value;
+	let expenseType = pType || expenseForm.querySelector('#new_expense_type .custom-select .cs-val').innerText;
 	let currentTableEle = document.querySelector('#expenses_page .current-table');
 	let expenseTable = pTable || BUDGET.expenseTables[currentTableEle.dataset.index];
 	let oos = expenseForm.dataset.sinking.toString() == 'true' ? true : false;
@@ -752,4 +768,35 @@ function toggleTheme(themeButton) {
 function changeAccentColor(color) {
 	document.body.style.setProperty('--accent', color);
 	BUDGET.accent = color;
+}
+
+function showSelect(selectButton) {
+	let id = selectButton.dataset.selectid;
+	let wrapper = document.querySelector('.cs-option-wrapper[data-selectid="' + id + '"]');
+	if (!wrapper || wrapper.querySelectorAll('.cs-option').length == 0) {
+		return;
+	}
+	if (wrapper.classList.contains('visible')) {
+		hideSelect(selectButton, wrapper);
+	} else {
+		wrapper.classList.add('visible');
+		selectButton.querySelector('.cs-arrow').style.rotate = '180deg';
+		window.addEventListener('click', hsmiddleman);
+		function hsmiddleman(evt) {
+			if (evt.target != selectButton && evt.target.parentElement != selectButton) {
+				hideSelect(selectButton, wrapper);
+				window.removeEventListener('click', hsmiddleman);
+			}
+		}
+	}
+}
+function hideSelect(selectButton, wrapper) {
+	wrapper.classList.remove('visible');
+	selectButton.querySelector('.cs-arrow').style.rotate = '0deg';
+}
+function selectValChanged(option) {
+	let wrapper = option.parentElement;
+	let id = wrapper.dataset.selectid;
+	let selectButton = document.querySelector('.custom-select[data-selectid="' + id + '"]');
+	selectButton.querySelector('.cs-val').innerText = option.innerText;
 }
