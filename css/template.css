@@ -298,7 +298,7 @@ button:disabled {
 	align-items: center;
 	height: stretch;
 	&:hover {
-		background-color: var(--buttonHoverBG);
+		background-color: var(--optionButtonHover);
 	}
 	& .cs-val {
 		align-content: center;
@@ -339,17 +339,17 @@ button:disabled {
 	& .cs-option {
 		cursor: pointer;
 		text-align: center;
-		font-size: 14px;
+		font-size: 13px;
 		padding: 1px;
 		border-radius: 10px;
 		color: var(--textOnOption);
 		&:hover {
-			background-color: var(--buttonHoverBG);
+			background-color: var(--optionButtonHover);
 		}
 	}
 }
 .cs-option-section {
-	font-size: 14px;
+	font-size: 13px;
 	background-color: var(--accent);
 	color: var(--textOnAccent);
 	padding: 1px;
