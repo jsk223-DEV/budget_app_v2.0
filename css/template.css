@@ -329,7 +329,7 @@ button:disabled {
 	border-radius: 0 0 10px 10px;
 	opacity: 0;
 	transition: opacity 200ms;
-	scrollbar-color: red var(--optionBG);
+	scrollbar-color: var(--accent) var(--optionBG);
 	scrollbar-width: thin;
 	border-top: 1px solid var(--inputBorder);
 	&.visible {
@@ -342,6 +342,7 @@ button:disabled {
 		font-size: 14px;
 		padding: 1px;
 		border-radius: 10px;
+		color: var(--textOnOption);
 		&:hover {
 			background-color: var(--buttonHoverBG);
 		}
