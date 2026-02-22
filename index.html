@@ -40,7 +40,15 @@
 							type="color"
 							value="#FF0000"
 							id="accent_picker"
+							list="accent_suggestions"
 						/>
+						<datalist id="accent_suggestions" style="position: absolute">
+							<option value="#950000"></option>
+							<option value="#008500"></option>
+							<option value="#0000FF"></option>
+							<option value="#c8b400"></option>
+							<option value="#4d3a92"></option>
+						</datalist>
 						<button data-hover="Change Theme" onclick="toggleTheme(this)" id="toggle_theme">Light</button>
 						<button data-hover="Save budget" onclick="saveBudget(true)">Save</button>
 						<button data-hover="Load past budgets" onclick="revealLoadOptions()" id="load_button">
@@ -168,7 +176,7 @@
 				<div>
 					<label for="new_expense_type" id="net_label">Type: </label>
 					<div class="custom-select-wrapper" id="new_expense_type">
-						<div class="custom-select" data-selectid="ex" onclick="showSelect(this)">
+						<button class="custom-select" popovertarget="net-pop">
 							<span class="cs-val"></span>
 							<span class="cs-arrow">
 								<svg
@@ -183,13 +191,13 @@
 									<path d="M 0 6 L 12 18 L 24 6" />
 								</svg>
 							</span>
-						</div>
-						<div class="cs-option-wrapper" data-selectid="ex">
-							<!-- <div class="cs-option" onclick="selectValChanged(this)">Bob</div>
-							<div class="cs-option" onclick="selectValChanged(this)">Tom</div>
-							<div class="cs-option" onclick="selectValChanged(this)">Jill</div>
-							<div class="cs-option" onclick="selectValChanged(this)">Jay</div> -->
-						</div>
+						</button>
+						<div
+							class="cs-option-wrapper"
+							id="net-pop"
+							popover
+							ontoggle="if(event.newState=='open'){this.parentElement.querySelector('.cs-arrow').style.rotate='180deg';}else{this.parentElement.querySelector('.cs-arrow').style.rotate='0deg';}"
+						></div>
 					</div>
 				</div>
 				<div>

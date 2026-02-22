@@ -18,6 +18,10 @@
 	margin: 0 10px;
 } */
 
+#plan_table tr{
+	height: 24px;
+}
+
 #plan_controls {
 	background-color: var(--darkLineColor);
 	align-content: center;

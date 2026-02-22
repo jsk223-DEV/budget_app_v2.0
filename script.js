@@ -663,9 +663,9 @@ function submitNewFund(form) {
 			.padStart(2, '0')}-${d.getFullYear()}`;
 		fund.addIncome(date, startingBalance, 'Starting Balance');
 	}
+	BUDGET.sinkingFunds.push(fund);
 	BUDGET.planFundSection.planItems.push(new PlanItem({ name: name }, BUDGET.planFundSection.planItems.length, true));
 	BUDGET.renderFundSection();
-	BUDGET.sinkingFunds.push(fund);
 	fund.render();
 }
 
@@ -770,33 +770,10 @@ function changeAccentColor(color) {
 	BUDGET.accent = color;
 }
 
-function showSelect(selectButton) {
-	let id = selectButton.dataset.selectid;
-	let wrapper = document.querySelector('.cs-option-wrapper[data-selectid="' + id + '"]');
-	if (!wrapper || wrapper.querySelectorAll('.cs-option').length == 0) {
-		return;
-	}
-	if (wrapper.classList.contains('visible')) {
-		hideSelect(selectButton, wrapper);
-	} else {
-		wrapper.classList.add('visible');
-		selectButton.querySelector('.cs-arrow').style.rotate = '180deg';
-		window.addEventListener('click', hsmiddleman);
-		function hsmiddleman(evt) {
-			if (evt.target != selectButton && evt.target.parentElement != selectButton) {
-				hideSelect(selectButton, wrapper);
-				window.removeEventListener('click', hsmiddleman);
-			}
-		}
-	}
-}
-function hideSelect(selectButton, wrapper) {
-	wrapper.classList.remove('visible');
-	selectButton.querySelector('.cs-arrow').style.rotate = '0deg';
-}
 function selectValChanged(option) {
 	let wrapper = option.parentElement;
-	let id = wrapper.dataset.selectid;
-	let selectButton = document.querySelector('.custom-select[data-selectid="' + id + '"]');
+	let csWrapper = wrapper.parentElement;
+	let selectButton = csWrapper.querySelector('.custom-select');
 	selectButton.querySelector('.cs-val').innerText = option.innerText;
+	wrapper.hidePopover();
 }

@@ -85,14 +85,25 @@
 	left: 300%;
 }
 
+/* #new_expense_button{
+	anchor-name: --neb;
+}
+#new_expense_button_oos{
+	anchor-name: --nebo;
+} */
+
 #new_expense_form {
 	top: 145px;
+	/* top: anchor(bottom);
+	left: anchor(left); */
 }
 #new_expense_form[data-sinking='false'] {
-	left: 150px;
+	left: 200px;
+	/* position-anchor: --neb; */
 }
 #new_expense_form[data-sinking='true'] {
-	left: 348px;
+	left: 395px;
+	/* position-anchor: --nebo; */
 }
 
 #new_expense_date {
