@@ -50,8 +50,8 @@ class ExpenseTable {
 							BUDGET.readOnly ? 'disabled' : ''
 						}  onclick="showExpenseForm(true)" class="show-expense-form" id="new_expense_button_oos">+ New Expense From Sinking Fund</button>
 						<button ${BUDGET.readOnly ? 'disabled' : ''}  data-hover="Transfer totals over to Plan" onclick="BUDGET.expenseTables[${
-			this.index
-		}].transferTotals()" class="transfer-totals">Transfer Totals</button>
+							this.index
+						}].transferTotals()" class="transfer-totals">Transfer Totals</button>
 						<button data-hover="Last Week" onclick="lastWeek(); hideExpenseForm()">&larr;</button>      
 						<button data-hover="Next Week" onclick="nextWeek(); hideExpenseForm()">&rarr;</button>
 					</td>
@@ -109,7 +109,7 @@ class ExpenseTable {
 			if (!found) {
 				for (let j = 0; j < BUDGET.planFundSection.planItems.length; j++) {
 					let planItem = BUDGET.planFundSection.planItems[j];
-					if (planItem.name === this.expenseSections[i].name) {
+					if (planItem.name === this.expenseSections[i].name.slice(14)) {
 						planItem.weeklyTotals[this.index] = this.expenseSections[i].typeTotal;
 						planItem.updateLTAS();
 						found = true;
