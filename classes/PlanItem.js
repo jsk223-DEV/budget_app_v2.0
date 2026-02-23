@@ -22,11 +22,11 @@ class PlanItem {
 			item.innerHTML = /* html */ `
 				<td></td>
 				<td><input type="text" class="input-name" placeholder="Item Name" value="${this.name}" disabled><span>$${sf.balance
-				.toString()
-				.concat(tb)}</span></td>
+					.toString()
+					.concat(tb)}</span></td>
 				<td><input ${
 					BUDGET.readOnly ? 'disabled' : ''
-				} type="number" class="budget-amount" onchange="updateBudgetAmount(this.parentElement.parentElement, this.value, true)"></td>
+				} type="number" class="budget-amount" onchange="this.value = Math.round(this.value);updateBudgetAmount(this.parentElement.parentElement, this.value, true)"></td>
 				<td></td>
 				<td><input disabled type="number" class="weekly-expense one" onchange="updateWeeklyTotal(0, this.value, this.parentElement.parentElement, true)"></td>
 				<td><input disabled type="number" class="weekly-expense two" onchange="updateWeeklyTotal(1, this.value, this.parentElement.parentElement, true)"></td>
@@ -47,11 +47,11 @@ class PlanItem {
 						BUDGET.readOnly ? 'disabled' : ''
 					} data-hover="Move Item" class="item-button move" onclick="movePlanItem(this.parentElement.parentElement)"><img class="move" src="assets/updownarr.svg"></button></td>
 				<td><input ${BUDGET.readOnly ? 'disabled' : ''} type="text" class="input-name" placeholder="Item Name" value="${
-				this.name
-			}" onchange="itemNameChanged(this.parentElement.parentElement, this.value)"></td>
+					this.name
+				}" onchange="itemNameChanged(this.parentElement.parentElement, this.value)"></td>
 				<td><input ${
 					BUDGET.readOnly ? 'disabled' : ''
-				} type="number" class="budget-amount" onchange="updateBudgetAmount(this.parentElement.parentElement, this.value)"></td>
+				} type="number" class="budget-amount" onchange="this.value = Math.round(this.value);updateBudgetAmount(this.parentElement.parentElement, this.value)"></td>
 				<td></td>
 				<td><input disabled type="number" class="weekly-expense one" onchange="updateWeeklyTotal(0, this.value, this.parentElement.parentElement)"></td>
 				<td><input disabled type="number" class="weekly-expense two" onchange="updateWeeklyTotal(1, this.value, this.parentElement.parentElement)"></td>

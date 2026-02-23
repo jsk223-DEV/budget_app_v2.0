@@ -214,7 +214,10 @@ function thisMonth() {
 	saveBudget();
 	let saves = JSON.parse(localStorage.getItem('BUDGET_SAVES'));
 	let thisDate = new Date();
-	let thisDateName = MONTH_LOOKUP.get(thisDate.getMonth().toString().padStart(2, '0')) + ' ' + thisDate.getFullYear();
+	let thisDateName =
+		MONTH_LOOKUP.get(thisDate.getMonth().toString().padStart(2, '0')) +
+		' ' +
+		thisDate.getFullYear();
 	for (let i = 0; i < saves.length; i++) {
 		if (saves[i].name == thisDateName) {
 			load(saves[i]);
@@ -225,7 +228,10 @@ function thisMonth() {
 	BUDGET.setToReadOnly();
 	BUDGET = saves[saves.length - 1];
 	let newBudget = new Budget(BUDGET, BUDGET.index + 1);
-	newBudget.date = { month: thisDate.getMonth().toString().padStart(2, '0'), year: thisDate.getFullYear() };
+	newBudget.date = {
+		month: thisDate.getMonth().toString().padStart(2, '0'),
+		year: thisDate.getFullYear(),
+	};
 	BUDGET = newBudget;
 	BUDGET.clearBudgetValues();
 	BUDGET.updateTotals();
@@ -256,10 +262,12 @@ function showMessageBanner(message) {
 		return;
 	}
 	messageBanner.innerText = message;
+	messageBanner.style.display = 'block';
 	messageBanner.style.opacity = 1;
 	messageBanner.classList.add('banner-visible');
 	setTimeout(() => {
 		messageBanner.style.opacity = 0;
+		messageBanner.style.display = 'none';
 		messageBanner.classList.remove('banner-visible');
 	}, 4000);
 }
@@ -302,7 +310,8 @@ function showSectionMarkers(focusedLoc) {
 		let marker = document.createElement('div');
 		marker.classList.add('move-marker');
 		marker.style.top = planTable.offsetTop + sectionBars[i].offsetTop + 'px';
-		marker.onclick = () => moveSectionTo(Number(focusedLoc), Number(sectionBars[i].dataset.budgetLocation));
+		marker.onclick = () =>
+			moveSectionTo(Number(focusedLoc), Number(sectionBars[i].dataset.budgetLocation));
 		marker.innerHTML = '<div></div><div></div><div></div>';
 		planPage.appendChild(marker);
 	}
@@ -311,9 +320,13 @@ function showSectionMarkers(focusedLoc) {
 	}
 	let marker = document.createElement('div');
 	marker.classList.add('move-marker');
-	marker.style.top = planTable.offsetTop + document.querySelector('#plan_page .spacer').offsetTop + 'px';
+	marker.style.top =
+		planTable.offsetTop + document.querySelector('#plan_page .spacer').offsetTop + 'px';
 	marker.onclick = () =>
-		moveSectionTo(Number(focusedLoc), Number(sectionBars[sectionBars.length - 1].dataset.budgetLocation) + 1);
+		moveSectionTo(
+			Number(focusedLoc),
+			Number(sectionBars[sectionBars.length - 1].dataset.budgetLocation) + 1,
+		);
 	marker.innerHTML = '<div></div><div></div><div></div>';
 	planPage.appendChild(marker);
 }
@@ -343,7 +356,9 @@ function moveItemTo(focused, destination) {
 }
 
 function showItemMarkers(focusedItemLoc) {
-	let items = document.querySelectorAll('#plan_page [data-budget-location^="' + focusedItemLoc[0] + '_"]');
+	let items = document.querySelectorAll(
+		'#plan_page [data-budget-location^="' + focusedItemLoc[0] + '_"]',
+	);
 	let planPage = document.querySelector('#plan_page');
 	let planTable = document.querySelector('#plan_table');
 	for (let i = 0; i < items.length; i++) {
@@ -353,7 +368,8 @@ function showItemMarkers(focusedItemLoc) {
 		let marker = document.createElement('div');
 		marker.classList.add('move-marker');
 		marker.style.top = planTable.offsetTop + items[i].offsetTop + 'px';
-		marker.onclick = () => moveItemTo(focusedItemLoc, items[i].dataset.budgetLocation.split('_'));
+		marker.onclick = () =>
+			moveItemTo(focusedItemLoc, items[i].dataset.budgetLocation.split('_'));
 		marker.innerHTML = '<div></div><div></div><div></div>';
 		planPage.appendChild(marker);
 	}
@@ -363,7 +379,11 @@ function showItemMarkers(focusedItemLoc) {
 	let marker = document.createElement('div');
 	marker.classList.add('move-marker');
 	marker.style.top =
-		planTable.offsetTop + items[items.length - 1].offsetTop + items[items.length - 1].offsetHeight - 2 + 'px';
+		planTable.offsetTop +
+		items[items.length - 1].offsetTop +
+		items[items.length - 1].offsetHeight -
+		2 +
+		'px';
 	let destination = items[items.length - 1].dataset.budgetLocation.split('_');
 	destination[1] = Number(destination[1]) + 1;
 	marker.onclick = () => moveItemTo(focusedItemLoc, destination);
@@ -381,7 +401,10 @@ function removeMoveMarkers() {
 	}
 }
 window.addEventListener('click', (evt) => {
-	if (!evt.target.classList.contains('move') && !evt.target.classList.contains('move-section-button')) {
+	if (
+		!evt.target.classList.contains('move') &&
+		!evt.target.classList.contains('move-section-button')
+	) {
 		removeMoveMarkers();
 	}
 	if (
@@ -412,7 +435,8 @@ function ordinalNumberify(num) {
 }
 function lastWeek() {
 	let tables = document.querySelectorAll('#expense_main .expense-table');
-	let currentIndex = document.querySelector('#expense_main .expense-table.current-table').dataset.index;
+	let currentIndex = document.querySelector('#expense_main .expense-table.current-table').dataset
+		.index;
 	if (tables[0].classList.contains('current-table')) {
 		return;
 	}
@@ -433,7 +457,9 @@ function lastWeek() {
 }
 function nextWeek() {
 	let tables = document.querySelectorAll('#expense_main .expense-table');
-	let currentIndex = Number(document.querySelector('#expense_main .expense-table.current-table').dataset.index);
+	let currentIndex = Number(
+		document.querySelector('#expense_main .expense-table.current-table').dataset.index,
+	);
 	if (tables[tables.length - 1].classList.contains('current-table')) {
 		return;
 	}
@@ -457,7 +483,9 @@ function nextWeek() {
 function updateDateOptions() {
 	let dateOptions = document.querySelectorAll('#ned_drop div');
 	let currentTable =
-		BUDGET.expenseTables[Number(document.querySelector('#expenses_page .current-table').dataset.index)];
+		BUDGET.expenseTables[
+			Number(document.querySelector('#expenses_page .current-table').dataset.index)
+		];
 	let daysInMonth = getDaysInMonth(BUDGET.date.year, BUDGET.date.month + 1);
 	for (let i = 0; i < dateOptions.length; i++) {
 		let month = BUDGET.date.month;
@@ -548,7 +576,8 @@ function submitNewExpense(expenseForm, pAmount, pDate, pLoc, pType, pTable) {
 	let expenseAmount = pAmount || expenseForm.querySelector('#new_expense_amount').value;
 	let expenseDate = pDate || expenseForm.querySelector('#new_expense_date').innerText;
 	let expenseLocation = pLoc || expenseForm.querySelector('#new_expense_location').value;
-	let expenseType = pType || expenseForm.querySelector('#new_expense_type .custom-select .cs-val').innerText;
+	let expenseType =
+		pType || expenseForm.querySelector('#new_expense_type .custom-select .cs-val').innerText;
 	let currentTableEle = document.querySelector('#expenses_page .current-table');
 	let expenseTable = pTable || BUDGET.expenseTables[currentTableEle.dataset.index];
 	let oos = expenseForm.dataset.sinking.toString() == 'true' ? true : false;
@@ -611,7 +640,7 @@ function submitNewExpense(expenseForm, pAmount, pDate, pLoc, pType, pTable) {
 			type: type,
 			index: 0,
 			sectionIndex: index,
-		})
+		}),
 	);
 	for (let i = 0; i < expenseTable.expenseSections[index].expenseItems.length; i++) {
 		expenseTable.expenseSections[index].expenseItems[i].index = i;
@@ -664,7 +693,9 @@ function submitNewFund(form) {
 		fund.addIncome(date, startingBalance, 'Starting Balance');
 	}
 	BUDGET.sinkingFunds.push(fund);
-	BUDGET.planFundSection.planItems.push(new PlanItem({ name: name }, BUDGET.planFundSection.planItems.length, true));
+	BUDGET.planFundSection.planItems.push(
+		new PlanItem({ name: name }, BUDGET.planFundSection.planItems.length, true),
+	);
 	BUDGET.renderFundSection();
 	fund.render();
 }

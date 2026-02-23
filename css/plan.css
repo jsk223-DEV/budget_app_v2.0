@@ -18,7 +18,7 @@
 	margin: 0 10px;
 } */
 
-#plan_table tr{
+#plan_table tr {
 	height: 24px;
 }
 
@@ -26,6 +26,10 @@
 	background-color: var(--darkLineColor);
 	align-content: center;
 	height: 20px;
+}
+
+#pay_day_drop option {
+	color: black;
 }
 
 #pay_day_drop,

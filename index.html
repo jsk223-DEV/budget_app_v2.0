@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -18,7 +18,10 @@
 	<body class="dark-theme">
 		<div id="small_screen_overlay">
 			<span>Sorry you have to small of screen.</span><br />
-			<span>This website is not available on mobile. If you are on computer, try widening your viewport.</span>
+			<span
+				>This website is not available on mobile. If you are on computer, try widening your
+				viewport.</span
+			>
 		</div>
 		<div id="nav">
 			<button class="active" onclick="moveToPage(this, [0, 100, 200])">Plan</button>
@@ -49,9 +52,19 @@
 							<option value="#c8b400"></option>
 							<option value="#4d3a92"></option>
 						</datalist>
-						<button data-hover="Change Theme" onclick="toggleTheme(this)" id="toggle_theme">Light</button>
+						<button
+							data-hover="Change Theme"
+							onclick="toggleTheme(this)"
+							id="toggle_theme"
+						>
+							Light
+						</button>
 						<button data-hover="Save budget" onclick="saveBudget(true)">Save</button>
-						<button data-hover="Load past budgets" onclick="revealLoadOptions()" id="load_button">
+						<button
+							data-hover="Load past budgets"
+							onclick="revealLoadOptions()"
+							id="load_button"
+						>
 							Load
 						</button>
 						<button
@@ -62,7 +75,7 @@
 							This Month
 						</button>
 						<!-- <button onclick="nextMonth()">Next Month ></button> -->
-						<div data-hover="Set the day you get paid on" id="pay_day_drop_con">
+						<div id="pay_day_drop_con">
 							<label for="pay_day_drop">Pay Day: </label>
 							<select id="pay_day_drop" onchange="setPayDayPreference(this)">
 								<option value="0">Sunday</option>
@@ -98,19 +111,54 @@
 					<td class="bold">Budget</td>
 					<td style="width: 50px"></td>
 					<td>
-						<input type="number" class="weekly-income one" onchange="updateIncome(0, this.value)" />
+						<input
+							type="number"
+							class="weekly-income one"
+							onchange="
+								this.value = Math.round(this.value);
+								updateIncome(0, this.value);
+							"
+						/>
 					</td>
 					<td>
-						<input type="number" class="weekly-income two" onchange="updateIncome(1, this.value)" />
+						<input
+							type="number"
+							class="weekly-income two"
+							onchange="
+								this.value = Math.round(this.value);
+								updateIncome(1, this.value);
+							"
+						/>
 					</td>
 					<td>
-						<input type="number" class="weekly-income three" onchange="updateIncome(2, this.value)" />
+						<input
+							type="number"
+							class="weekly-income three"
+							onchange="
+								this.value = Math.round(this.value);
+								updateIncome(2, this.value);
+							"
+						/>
 					</td>
 					<td>
-						<input type="number" class="weekly-income four" onchange="updateIncome(3, this.value)" />
+						<input
+							type="number"
+							class="weekly-income four"
+							onchange="
+								this.value = Math.round(this.value);
+								updateIncome(3, this.value);
+							"
+						/>
 					</td>
 					<td>
-						<input type="number" class="weekly-income five" onchange="updateIncome(4, this.value)" />
+						<input
+							type="number"
+							class="weekly-income five"
+							onchange="
+								this.value = Math.round(this.value);
+								updateIncome(4, this.value);
+							"
+						/>
 					</td>
 					<td class="bold">Left To</td>
 					<td class="bold">Spent</td>
@@ -145,10 +193,37 @@
 			</table>
 			<div class="option-box" id="item_options">
 				<div class="close" onclick="closeOptions(this.parentElement)">X</div>
-				<div onclick="addPlanSection(); closeOptions(this.parentElement)">Add Section</div>
-				<div onclick="addPlanItem(); closeOptions(this.parentElement)">Add Item</div>
-				<div onclick="deletePlanSection(); closeOptions(this.parentElement)">Delete Section</div>
-				<div onclick="moveSection(); closeOptions(this.parentElement)" class="move-section-button">
+				<div
+					onclick="
+						addPlanSection();
+						closeOptions(this.parentElement);
+					"
+				>
+					Add Section
+				</div>
+				<div
+					onclick="
+						addPlanItem();
+						closeOptions(this.parentElement);
+					"
+				>
+					Add Item
+				</div>
+				<div
+					onclick="
+						deletePlanSection();
+						closeOptions(this.parentElement);
+					"
+				>
+					Delete Section
+				</div>
+				<div
+					onclick="
+						moveSection();
+						closeOptions(this.parentElement);
+					"
+					class="move-section-button"
+				>
 					Move Section
 				</div>
 			</div>
@@ -158,7 +233,11 @@
 				<div class="form-name">New Expense</div>
 				<div>
 					<label for="new_expense_amount">Amount $: </label>
-					<input id="new_expense_amount" type="number" />
+					<input
+						onchange="this.value = Math.round(this.value)"
+						id="new_expense_amount"
+						type="number"
+					/>
 				</div>
 
 				<div>
@@ -167,7 +246,8 @@
 				</div>
 
 				<div>
-					<label for="new_expense_location">Location: </label> <input id="new_expense_location" type="text" />
+					<label for="new_expense_location">Location: </label>
+					<input id="new_expense_location" type="text" />
 				</div>
 				<!-- <div>
 					<label for="new_expense_type" id="net_label">Type: </label>
@@ -176,7 +256,11 @@
 				<div>
 					<label for="new_expense_type" id="net_label">Type: </label>
 					<div class="custom-select-wrapper" id="new_expense_type">
-						<button class="custom-select" popovertarget="net-pop">
+						<button
+							class="custom-select"
+							popovertarget="net-pop"
+							style="anchor-name: --net-pop"
+						>
 							<span class="cs-val"></span>
 							<span class="cs-arrow">
 								<svg
@@ -193,16 +277,30 @@
 							</span>
 						</button>
 						<div
+							style="position-anchor: --net-pop"
 							class="cs-option-wrapper"
 							id="net-pop"
 							popover
-							ontoggle="if(event.newState=='open'){this.parentElement.querySelector('.cs-arrow').style.rotate='180deg';}else{this.parentElement.querySelector('.cs-arrow').style.rotate='0deg';}"
+							ontoggle="
+								if (event.newState == 'open') {
+									this.parentElement.querySelector('.cs-arrow').style.rotate =
+										'180deg';
+								} else {
+									this.parentElement.querySelector('.cs-arrow').style.rotate =
+										'0deg';
+								}
+							"
 						></div>
 					</div>
 				</div>
 				<div>
 					<button onclick="hideExpenseForm()">Cancel</button>
-					<button onclick="submitNewExpense(this.parentElement.parentElement); hideExpenseForm()">
+					<button
+						onclick="
+							submitNewExpense(this.parentElement.parentElement);
+							hideExpenseForm();
+						"
+					>
 						Submit
 					</button>
 				</div>
@@ -221,24 +319,42 @@
 		<div class="page" id="sinking_funds_page">
 			<div id="sinking_main">
 				<div id="s_control_row">
-					<button id="new_sinking_fund" onclick="revealFundForm()">+ New Sinking Fund</button>
+					<button id="new_sinking_fund" onclick="revealFundForm()">
+						+ New Sinking Fund
+					</button>
 				</div>
 				<div id="new_fund_form" class="form">
 					<div class="form-name">New Sinking Fund</div>
-					<div><label for="new_fund_name">Name: </label> <input id="new_fund_name" type="text" /></div>
+					<div>
+						<label for="new_fund_name">Name: </label>
+						<input id="new_fund_name" type="text" />
+					</div>
 
 					<div>
 						<label for="new_fund_amount">Starting Balance $: </label>
-						<input id="new_fund_amount" type="number" />
+						<input
+							id="new_fund_amount"
+							type="number"
+							onchange="this.value = Math.round(this.value)"
+						/>
 					</div>
 
 					<div>
 						<label for="new_fund_target_balance">Target Balance $: </label>
-						<input id="new_fund_target_balance" type="number" />
+						<input
+							id="new_fund_target_balance"
+							type="number"
+							onchange="this.value = Math.round(this.value)"
+						/>
 					</div>
 					<div>
 						<button onclick="hideFundForm()">Cancel</button>
-						<button onclick="submitNewFund(this.parentElement.parentElement); hideFundForm()">
+						<button
+							onclick="
+								submitNewFund(this.parentElement.parentElement);
+								hideFundForm();
+							"
+						>
 							Submit
 						</button>
 					</div>
@@ -267,8 +383,8 @@
 		</svg> -->
 
 		<div id="lucide_copyright" style="display: none">
-			Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2023 as part of Feather (MIT). All other
-			copyright (c) for Lucide are held by Lucide Contributors 2025.
+			Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2023 as part of Feather
+			(MIT). All other copyright (c) for Lucide are held by Lucide Contributors 2025.
 		</div>
 
 		<script src="constants.js"></script>

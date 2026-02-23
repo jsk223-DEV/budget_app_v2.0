@@ -184,6 +184,7 @@ body {
 	opacity: 0;
 	transition: opacity 500ms;
 	z-index: 100;
+	display: none;
 }
 
 [data-hover] {
@@ -198,6 +199,8 @@ body {
 	top: 100%;
 	position-anchor: --hoverAnchor;
 	position-area: bottom right;
+	/* top: anchor(bottom);
+	left: anchor(left); */
 	background-color: var(--optionBG);
 	border: 1px solid var(--mainBorder);
 	border-radius: 5px;
@@ -326,10 +329,11 @@ button:disabled {
 	max-height: 200px;
 	overflow-y: auto;
 	padding: 5px 5px;
-	position: absolute;
+	/* position: absolute;
+	position-anchor: --attr(id);
+	position-area: center; */
 	top: anchor(bottom);
 	left: anchor(left);
-	position-anchor: --attr(id);
 	background-color: var(--optionBG);
 	border-radius: 0 0 10px 10px;
 	transition: opacity 200ms;
@@ -349,7 +353,7 @@ button:disabled {
 			background-color: var(--optionButtonHover);
 		}
 	}
-	
+
 	& .cs-option-section {
 		margin-bottom: 1px;
 		height: 15px;

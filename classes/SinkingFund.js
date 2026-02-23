@@ -12,7 +12,14 @@ class SinkingFund {
 		this.balance = round(this.balance);
 		let loc = location || '--';
 		let d = date || '--';
-		this.history.unshift(new SinkingHistoryItem({ type: 'income', amount: '$' + amount, location: loc, date: d }));
+		this.history.unshift(
+			new SinkingHistoryItem({
+				type: 'income',
+				amount: '$' + amount,
+				location: loc,
+				date: d,
+			}),
+		);
 	}
 
 	addExpense(date, amount, location) {
@@ -20,7 +27,14 @@ class SinkingFund {
 		this.balance = round(this.balance);
 		let loc = location || '--';
 		let d = date || '--';
-		this.history.unshift(new SinkingHistoryItem({ type: 'expense', amount: '$' + amount, location: loc, date: d }));
+		this.history.unshift(
+			new SinkingHistoryItem({
+				type: 'expense',
+				amount: '$' + amount,
+				location: loc,
+				date: d,
+			}),
+		);
 	}
 
 	render() {
@@ -35,7 +49,7 @@ class SinkingFund {
 				<div class="form-name">Add Money</div>
 				<div>
 					<label>Amount $: </label>
-					<input class="sinking-manual-amount" type="number" />
+					<input class="sinking-manual-amount" type="number" onchange="this.value = Math.round(this.value)" />
 				</div>
 				<div>
 					<label>Date: </label>
@@ -57,7 +71,7 @@ class SinkingFund {
 				<div class="form-name">Target Balance</div>
 				<div>
 					<label>Amount $: </label>
-					<input class="sinking-tb-amount" type="number" />
+					<input class="sinking-tb-amount" type="number" onchange="this.value = Math.round(this.value)"/>
 				</div>
 				<div>
 					<button onclick="hideTBForm(this.parentElement.parentElement)">Cancel</button>
@@ -77,9 +91,9 @@ class SinkingFund {
 				}  data-hover="Remove Money" class="remove-money" onclick="showManualForm('expense', 
 					${this.index}
 				)"><img src="assets/subtract.svg" /></button>
-				<button ${BUDGET.readOnly ? 'disabled' : ''}  data-hover="Delete Fund" class="delete-fund" onclick="deleteSinkingFund(
+				<button ${BUDGET.readOnly ? 'disabled' : ''}  data-hover="Delete Fund" class="delete-fund" onclick="if(window.confirm('Are you sure you want to delete ${this.name}?')){deleteSinkingFund(
 					${this.index}
-				)"><img src="assets/trashcan.svg" /></button>
+			)}"><img src="assets/trashcan.svg" /></button>
 				<button ${
 					BUDGET.readOnly ? 'disabled' : ''
 				}  data-hover="Change Target Balance" class="change-target-balance" onclick="showTBForm(

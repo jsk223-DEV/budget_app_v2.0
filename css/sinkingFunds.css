@@ -58,10 +58,11 @@
 	width: 20px;
 	height: 20px;
 	display: inline-flex;
-	justify-content: left;
+	justify-content: center;
 	align-items: center;
 	border-radius: 7px;
 	border: 1px solid var(--mainBorder);
+	cursor: pointer;
 	/* overflow: hidden;
 	transition: width 150ms, background-color 150ms;
 	text-wrap: nowrap; */
@@ -72,10 +73,10 @@
 }
 .sinking-fund .control button img {
 	width: 15px;
-	aspect-ratio: 1/1;
+	height: 15px;
 	position: relative;
-	right: 5px;
-	bottom: 1px;
+	/* right: 5px;
+	bottom: 1px; */
 }
 .sinking-fund .balance {
 	font-weight: 600;
